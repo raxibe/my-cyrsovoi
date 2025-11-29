@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.plugin.serialization)
 }
 
 android {
@@ -56,6 +57,27 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
         ///
+
+
+    implementation(libs.androidx.navigation.comose)
+
+    implementation(libs.kotlinx.serialization.json)
+
+
+
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.53")
+
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
 }
