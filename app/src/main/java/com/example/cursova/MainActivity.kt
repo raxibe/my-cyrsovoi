@@ -49,9 +49,11 @@ import com.example.cursova.Screen.RepairManagement
 import com.example.cursova.Screen.Screens
 import com.example.cursova.Screen.WarehouseManagement
 import com.example.cursova.ui.theme.CursovaTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 // Основной класс активности остается прежним
 // Основной класс активности остаётся таким же
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

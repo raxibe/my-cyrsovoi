@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.plugin.serialization)
+    id("com.google.devtools.ksp") // Добавьте эту строку
+    id("dagger.hilt.android.plugin") // И эту строку для Hilt
 }
 
 android {
@@ -70,11 +72,13 @@ dependencies {
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+
 
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.53")
-
+    ksp("com.google.dagger:hilt-compiler:2.53")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // ViewModel
