@@ -44,14 +44,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
 import com.example.cursova.Screen.RepairManagement
 import com.example.cursova.Screen.Screens
 import com.example.cursova.Screen.WarehouseManagement
 import com.example.cursova.ui.theme.CursovaTheme
+import dagger.hilt.android.AndroidEntryPoint
+
 
 // Основной класс активности остается прежним
 // Основной класс активности остаётся таким же
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +81,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Screens.ProcurementManagement.route) {
                     ProcurementManagement(navController = navController)
+                }
+                composable(Screens.Nomenclature.route) {
+                    Nomenclature(navController = navController)
                 }
 
             }
