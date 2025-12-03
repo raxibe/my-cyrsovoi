@@ -8,6 +8,5 @@ data class Nomenclature (
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,
-    val type: String,
-    val price: Int
+
 )

@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.cursova.Screen.AddNomenclature
 import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
 import com.example.cursova.Screen.RepairManagement
@@ -84,6 +85,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Screens.Nomenclature.route) {
                     Nomenclature(navController = navController)
+                }
+                composable(Screens.AddNomenclature .route) {
+                    AddNomenclature(navController = navController)
                 }
 
             }

@@ -156,14 +156,7 @@ fun ModuleCard2(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(15.dp))
             .fillMaxWidth(0.9F)
-            .clickable { // Здесь делаем карту кликабельной
-                when (title) {
-                    "Документ закупки" -> navController.navigate(Screens.RepairManagment.route)
-                    "Список номенклатуры" -> navController.navigate(Screens.Nomenclature.route)
 
-                    // Добавляйте дополнительные условия для других карт
-                }
-            }
             .height(140.dp),
 
 
@@ -173,6 +166,14 @@ fun ModuleCard2(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White) // Белый фон для содержимого внутри Card
+                .clickable { // Здесь делаем карту кликабельной
+                    when (title) {
+                        "Документ закупки" -> navController.navigate(Screens.RepairManagment.route)
+                        "Список номенклатуры" -> navController.navigate(Screens.Nomenclature.route)
+
+                        // Добавляйте дополнительные условия для других карт
+                    }
+                }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

@@ -6,4 +6,5 @@ sealed class Screens (val route: String){
     object WarehouseManagement : Screens ("warehouse-management")
     object ProcurementManagement : Screens ("procurement-management")
     object Nomenclature : Screens ("nomenclature")
+    object AddNomenclature : Screens ("add-nomen")
 }

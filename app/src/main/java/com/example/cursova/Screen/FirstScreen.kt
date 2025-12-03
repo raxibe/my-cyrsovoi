@@ -59,6 +59,13 @@ fun FirstScreen( navController: NavController) {
 
 @Composable
 fun HeaderSection() {
+
+    val gradient3 = Brush.linearGradient(
+        colors = listOf(Color(0xFF5B00FF), Color(0xFF00E0FF))
+    )
+
+
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -70,6 +77,8 @@ fun HeaderSection() {
             painter = painterResource(id = R.drawable.boxes),
             contentDescription = "Module Icon",
             modifier = Modifier.size(48.dp)
+                .background(gradient3, shape = RoundedCornerShape(7.dp))
+                .padding(7.dp)
         )
         Spacer(modifier = Modifier.width(5.dp))
         Column {
