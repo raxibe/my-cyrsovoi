@@ -44,11 +44,21 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.cursova.Screen.AddHall
 import com.example.cursova.Screen.AddNomenclature
+import com.example.cursova.Screen.AddRepair
+import com.example.cursova.Screen.AddResponsible
+import com.example.cursova.Screen.AddServiceCenter
+import com.example.cursova.Screen.AddSupplier
+import com.example.cursova.Screen.Hall
 import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
+import com.example.cursova.Screen.Repair
 import com.example.cursova.Screen.RepairManagement
+import com.example.cursova.Screen.Responsible
 import com.example.cursova.Screen.Screens
+import com.example.cursova.Screen.ServiceCenter
+import com.example.cursova.Screen.Supplier
 import com.example.cursova.Screen.WarehouseManagement
 import com.example.cursova.ui.theme.CursovaTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -89,6 +99,46 @@ class MainActivity : ComponentActivity() {
                 composable(Screens.AddNomenclature .route) {
                     AddNomenclature(navController = navController)
                 }
+                composable(Screens.Hall .route) {
+                    Hall(navController = navController)
+                }
+
+                composable(Screens.AddHall.route) {
+                    AddHall(navController = navController)
+                }
+
+                composable(Screens.Supplier .route) {
+                    Supplier(navController = navController)
+                }
+
+                composable(Screens.AddSupplier.route) {
+                    AddSupplier(navController = navController)
+                }
+
+                composable(Screens.Repair .route) {
+                    Repair(navController = navController)
+                }
+
+                composable(Screens.AddRepair .route) {
+                    AddRepair(navController = navController)
+                }
+                composable(Screens.ServiceCenter .route) {
+                    ServiceCenter(navController = navController)
+                }
+
+                composable(Screens.AddServiceCenter .route) {
+                    AddServiceCenter(navController = navController)
+                }
+                composable(Screens.Responsible .route) {
+                    Responsible(navController = navController)
+                }
+
+                composable(Screens.AddResponsible .route) {
+                    AddResponsible(navController = navController)
+                }
+
+
+
 
             }
 

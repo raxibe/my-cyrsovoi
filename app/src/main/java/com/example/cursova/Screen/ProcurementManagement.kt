@@ -81,31 +81,7 @@ fun ProcurementManagement(navController: NavController) {
     }
 }
 
-@Composable
-fun HeaderSection2() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 60.dp, start = 12.dp)
-    ) {
 
-
-
-        Spacer(modifier = Modifier.width(5.dp))
-        Column {
-            Text(
-                modifier = Modifier,
-                text = "Управление закупками",
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "2 раздела",
-            )
-        }
-    }
-}
 
 @Composable
 fun ModulesSection2(navController: NavController) {
@@ -117,6 +93,9 @@ fun ModulesSection2(navController: NavController) {
 
     val gradient2 = Brush.linearGradient(
         colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+    )
+    val gradient3 = Brush.linearGradient(
+        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
     )
 
 
@@ -135,6 +114,16 @@ fun ModulesSection2(navController: NavController) {
             title = "Список номенклатуры",
             description = "Справочник номенклатуры товаров",
             iconColor = gradient2, // Зеленый цвет иконки
+            navController = navController
+
+
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        ModuleCard2(
+            iconResId = R.drawable.usercheck,
+            title = "Поставщики",
+            description = "Справочник поставщиков",
+            iconColor = gradient3, // Зеленый цвет иконки
             navController = navController
 
 
@@ -170,6 +159,7 @@ fun ModuleCard2(
                     when (title) {
                         "Документ закупки" -> navController.navigate(Screens.RepairManagment.route)
                         "Список номенклатуры" -> navController.navigate(Screens.Nomenclature.route)
+                        "Поставщики" -> navController.navigate(Screens.Supplier.route)
 
                         // Добавляйте дополнительные условия для других карт
                     }

@@ -1,4 +1,4 @@
-package com.example.cursova.data
+package com.example.cursova.Nomenclature
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

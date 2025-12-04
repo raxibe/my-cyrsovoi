@@ -1,6 +1,5 @@
 package com.example.cursova.Screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,37 +31,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.Nomenclature.Nomenclature
-import com.example.cursova.viewModel.NomenclatureViewModel
+import com.example.cursova.Responsible.Responsible
+import com.example.cursova.viewModel.ResponsibleViewModel
 
-
-
-
-
-@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Nomenclature(
+fun Responsible(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: ResponsibleViewModel = hiltViewModel()
 ) {
-    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
+    val responsible by viewModel.responsibles.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Номенклатура") },
+                title = { Text("Ответственные за инвентарь") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate(Screens.AddNomenclature.route) }) {
+                    IconButton(onClick = { navController.navigate(Screens.AddResponsible.route) }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 },
@@ -82,10 +76,10 @@ fun Nomenclature(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(nomens) { nomen ->
-                    NomenCard(
-                        nomen = nomen,
-                        onDeleteClick = { viewModel.deleteNomen(nomen) }
+                items(responsible) { responsible ->
+                    ResponsibleCard(
+                        responsible = responsible,
+                        onDeleteClick = { viewModel.deleteResponsible(responsible) }
                     )
                 }
             }
@@ -93,9 +87,10 @@ fun Nomenclature(
     }
 }
 
+
 @Composable
-fun NomenCard(
-    nomen: Nomenclature,
+fun ResponsibleCard(
+    responsible: Responsible,
     onDeleteClick: () -> Unit
 ) {
     Card(
@@ -120,7 +115,7 @@ fun NomenCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = nomen.name,
+                        text = responsible.name,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -130,68 +125,10 @@ fun NomenCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Удалить номенклатуру"
+                        contentDescription = "Удалить ответственного"
                     )
                 }
             }
         }
     }
 }
-
-
-
-
-
-//@Composable
-//fun Nomenclature(
-//    navController: NavController,
-//    viewModel: NomenclatureViewModel = hiltViewModel()
-//) {
-//    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
-//
-//
-//
-//    LazyColumn (
-//        verticalArrangement = Arrangement.spacedBy(8.dp)
-//    ){
-//        items(nomens){nomen ->
-//            NomenCard(
-//                nomen = nomen,
-//                onDeleteClick = { viewModel.deleteNomen(nomen) } // Передача реального обработчика
-//            )
-//        }
-//    }
-//}
-//
-//@Composable
-//fun NomenCard(
-//    nomen: Nomenclature,
-//    onDeleteClick: () -> Unit
-//){
-//
-//    Card(
-//        modifier = Modifier.fillMaxWidth(),
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ){
-//            Text(
-//                text = nomen.name
-//            )
-//            Text(
-//                text = nomen.type
-//            )
-//            IconButton(onClick = onDeleteClick) {
-//                Icon(
-//                    Icons.Default.Delete,
-//                    contentDescription = "Удалить номенклатуру"
-//                )
-//            }
-//        }
-//    }
-//
-//}

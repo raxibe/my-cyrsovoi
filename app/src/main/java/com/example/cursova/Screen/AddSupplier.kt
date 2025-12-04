@@ -29,21 +29,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.viewModel.NomenclatureViewModel
+import com.example.cursova.viewModel.SupplierViewModel
 
 @Composable
-fun AddNomenclature(
+fun AddSupplier(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: SupplierViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
     )
 
     Column(
@@ -84,8 +84,8 @@ fun AddNomenclature(
 
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.packag),
-                            contentDescription = "Номенклатура",
+                            painter = painterResource(id = R.drawable.usercheck),
+                            contentDescription = "Поставщик",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
@@ -94,12 +94,12 @@ fun AddNomenclature(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Добавление номенклатуры",
+                            text = "Добавление поставщика",
                             style = MaterialTheme.typography.headlineMedium,
 
                         )
                         Text(
-                            text = "Создание новой позиции в каталоге товаров",
+                            text = "Создание нового поставщика",
                             style = MaterialTheme.typography.bodyMedium,
 
                         )
@@ -122,7 +122,7 @@ fun AddNomenclature(
                             .padding(16.dp)
 
                     ){Text(
-                        text = "Номенклатура",
+                        text = "Поставщик",
                         style = MaterialTheme.typography.titleMedium
                     )
                         TextField(
@@ -175,8 +175,8 @@ fun AddNomenclature(
                 ),
                 onClick = {
                     if (name.isNotBlank()) {
-                        val nomen = com.example.cursova.Nomenclature.Nomenclature(name = name)
-                        viewModel.addNomen(nomen)
+                        val supplier = com.example.cursova.Supplier.Supplier(name = name)
+                        viewModel.addSupplier(supplier)
                         navController.popBackStack()
                     } else {
                         errorMessage = "Наименование должно быть заполнено"
@@ -192,7 +192,7 @@ fun AddNomenclature(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent, // Цвет фона кнопки
-                      // Цвет текста на кнопке
+                    // Цвет текста на кнопке
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -205,7 +205,5 @@ fun AddNomenclature(
         }
     }
 }
-
-
 
 

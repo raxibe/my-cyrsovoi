@@ -73,7 +73,7 @@ fun WarehouseManagement(navController: NavController) {
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            ModulesSection(navController)
+            ModulesSection1(navController)
         }
     }
 }
@@ -106,7 +106,7 @@ fun HeaderSection1() {
 }
 
 @Composable
-fun ModulesSection(navController: NavController) {
+fun ModulesSection1(navController: NavController) {
 
     val gradient = Brush.linearGradient(
         colors = listOf(Color(0xDA008DFF), Color(0xE40029FF))
@@ -139,6 +139,7 @@ fun ModulesSection(navController: NavController) {
             title = "Список залов",
             description = "Управление спортивными залами",
             iconColor = gradient, // Фиолетовый цвет иконки
+            navController = navController
 
 
         )
@@ -148,6 +149,7 @@ fun ModulesSection(navController: NavController) {
             title = "Инвентаризация",
             description = "Проведение и учет инвентаризации",
             iconColor = gradient2, // Оранжевый цвет иконки
+            navController = navController
 
 
         )
@@ -157,6 +159,7 @@ fun ModulesSection(navController: NavController) {
             title = "Основные средства",
             description = "Учет основных средств",
             iconColor = gradient3, // Зеленый цвет иконки
+            navController = navController
 
 
         )
@@ -166,6 +169,7 @@ fun ModulesSection(navController: NavController) {
             title = "Ответственные за инвентарь",
             description = "Список материально ответственных лиц",
             iconColor = gradient4, // Синий цвет иконки
+            navController = navController
 
 
         )
@@ -175,6 +179,7 @@ fun ModulesSection(navController: NavController) {
             title = "Принятие к учету",
             description = "Оприходование нового инвентаря",
             iconColor = gradient5, // Пурпурный цвет иконки
+            navController = navController
 
 
         )
@@ -184,6 +189,7 @@ fun ModulesSection(navController: NavController) {
             title = "Списание",
             description = "Списание инвентаря",
             iconColor = gradient6, // Розовый цвет иконки
+            navController = navController
 
 
         )
@@ -196,6 +202,7 @@ fun ModuleCard1(
     title: String,
     description: String,
     iconColor: Brush,
+    navController: NavController
 
 ) {
     Card(
@@ -209,6 +216,15 @@ fun ModuleCard1(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White) // Белый фон для содержимого внутри Card
+                .clickable { // Здесь делаем карту кликабельной
+                    when (title) {
+                        "Список залов" -> navController.navigate(Screens.Hall.route)
+                        "Управление складом" -> navController.navigate(Screens.WarehouseManagement.route)
+                        "Управление закупками" -> navController.navigate(Screens.ProcurementManagement .route)
+                        "Ответственные за инвентарь" -> navController.navigate(Screens.Responsible .route)
+                        // Добавляйте дополнительные условия для других карт
+                    }
+                }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

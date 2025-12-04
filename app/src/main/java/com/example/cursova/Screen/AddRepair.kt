@@ -29,24 +29,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.viewModel.NomenclatureViewModel
+import com.example.cursova.viewModel.RepairViewModel
 
 @Composable
-fun AddNomenclature(
+fun AddRepair(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: RepairViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
-    )
+    val gradient = Brush.linearGradient(
+        colors = listOf(Color(0xFF9B65FF), Color(0xFF5D00FF)),
 
-    Column(
+        )
+
+    Column (
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.фонпервогоэкрана))
@@ -84,22 +85,22 @@ fun AddNomenclature(
 
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.packag),
-                            contentDescription = "Номенклатура",
+                            painter = painterResource(id = R.drawable.list),
+                            contentDescription = "Вид ремонта",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .background(gradient2, shape = RoundedCornerShape(7.dp))
+                                .background(gradient, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Добавление номенклатуры",
+                            text = "Добавление вида ремонта",
                             style = MaterialTheme.typography.headlineMedium,
 
                         )
                         Text(
-                            text = "Создание новой позиции в каталоге товаров",
+                            text = "Создание нового вида ремонта",
                             style = MaterialTheme.typography.bodyMedium,
 
                         )
@@ -121,10 +122,11 @@ fun AddNomenclature(
                             .fillMaxWidth()
                             .padding(16.dp)
 
-                    ){Text(
-                        text = "Номенклатура",
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    ) {
+                        Text(
+                            text = "Вид ремонта",
+                            style = MaterialTheme.typography.titleMedium
+                        )
                         TextField(
                             value = name,
                             onValueChange = { name = it },
@@ -140,7 +142,8 @@ fun AddNomenclature(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
-                        }}
+                        }
+                    }
 
                 }
 
@@ -149,7 +152,6 @@ fun AddNomenclature(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
 
 
         val gradient5 = Brush.linearGradient(
@@ -175,8 +177,8 @@ fun AddNomenclature(
                 ),
                 onClick = {
                     if (name.isNotBlank()) {
-                        val nomen = com.example.cursova.Nomenclature.Nomenclature(name = name)
-                        viewModel.addNomen(nomen)
+                        val repairType = com.example.cursova.repair.Repair(name = name)
+                        viewModel.addRepair(repairType)
                         navController.popBackStack()
                     } else {
                         errorMessage = "Наименование должно быть заполнено"
@@ -192,7 +194,7 @@ fun AddNomenclature(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent, // Цвет фона кнопки
-                      // Цвет текста на кнопке
+                    // Цвет текста на кнопке
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier

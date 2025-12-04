@@ -1,6 +1,5 @@
 package com.example.cursova.Screen
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,25 +31,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.Nomenclature.Nomenclature
-import com.example.cursova.viewModel.NomenclatureViewModel
+import com.example.cursova.ServiceCenter.ServiceCenter
+import com.example.cursova.viewModel.ServiceCenterViewModel
 
-
-
-
-
-@SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Nomenclature(
+fun ServiceCenter(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: ServiceCenterViewModel = hiltViewModel()
 ) {
-    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
+    val serviceCenters by viewModel.serviceCenters.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -62,7 +56,7 @@ fun Nomenclature(
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate(Screens.AddNomenclature.route) }) {
+                    IconButton(onClick = { navController.navigate(Screens.AddServiceCenter.route) }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 },
@@ -82,10 +76,10 @@ fun Nomenclature(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(nomens) { nomen ->
-                    NomenCard(
-                        nomen = nomen,
-                        onDeleteClick = { viewModel.deleteNomen(nomen) }
+                items(serviceCenters) { serviceCenter ->
+                    ServiceCenterCard(
+                        serviceCenter = serviceCenter,
+                        onDeleteClick = { viewModel.deleteServiceCenter(serviceCenter) }
                     )
                 }
             }
@@ -94,11 +88,11 @@ fun Nomenclature(
 }
 
 @Composable
-fun NomenCard(
-    nomen: Nomenclature,
+fun ServiceCenterCard(
+    serviceCenter: ServiceCenter,
     onDeleteClick: () -> Unit
 ) {
-    Card(
+    Card (
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
@@ -120,7 +114,7 @@ fun NomenCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = nomen.name,
+                        text = serviceCenter.name,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -130,68 +124,10 @@ fun NomenCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Удалить номенклатуру"
+                        contentDescription = "Удалить сервисный центр"
                     )
                 }
             }
         }
     }
 }
-
-
-
-
-
-//@Composable
-//fun Nomenclature(
-//    navController: NavController,
-//    viewModel: NomenclatureViewModel = hiltViewModel()
-//) {
-//    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
-//
-//
-//
-//    LazyColumn (
-//        verticalArrangement = Arrangement.spacedBy(8.dp)
-//    ){
-//        items(nomens){nomen ->
-//            NomenCard(
-//                nomen = nomen,
-//                onDeleteClick = { viewModel.deleteNomen(nomen) } // Передача реального обработчика
-//            )
-//        }
-//    }
-//}
-//
-//@Composable
-//fun NomenCard(
-//    nomen: Nomenclature,
-//    onDeleteClick: () -> Unit
-//){
-//
-//    Card(
-//        modifier = Modifier.fillMaxWidth(),
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ){
-//            Text(
-//                text = nomen.name
-//            )
-//            Text(
-//                text = nomen.type
-//            )
-//            IconButton(onClick = onDeleteClick) {
-//                Icon(
-//                    Icons.Default.Delete,
-//                    contentDescription = "Удалить номенклатуру"
-//                )
-//            }
-//        }
-//    }
-//
-//}

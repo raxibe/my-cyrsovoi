@@ -2,6 +2,7 @@ package com.example.cursova.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,18 +32,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.viewModel.NomenclatureViewModel
+import com.example.cursova.viewModel.HallViewModel
+import com.example.cursova.viewModel.ResponsibleViewModel
 
 @Composable
-fun AddNomenclature(
+fun AddResponsible(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: ResponsibleViewModel = hiltViewModel(),
+    hallViewModel: HallViewModel = hiltViewModel()
 ) {
     var name by remember { mutableStateOf("") }
+    var selectedHallId by remember { mutableStateOf(-1) }
     var errorMessage by remember { mutableStateOf("") }
+    var isHallDropdownExpanded by remember { mutableStateOf(false) }
+
+    val halls by hallViewModel.halls.collectAsStateWithLifecycle()
 
     val gradient2 = Brush.linearGradient(
         colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
@@ -84,8 +94,8 @@ fun AddNomenclature(
 
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.packag),
-                            contentDescription = "Номенклатура",
+                            painter = painterResource(id = R.drawable.users),
+                            contentDescription = "Ответственный за инвентарь",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
@@ -94,14 +104,14 @@ fun AddNomenclature(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Добавление номенклатуры",
+                            text = "Добавление ответственного за инвентарь",
                             style = MaterialTheme.typography.headlineMedium,
-
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                         Text(
-                            text = "Создание новой позиции в каталоге товаров",
+                            text = "Создание нового ответственного за инвентарь",
                             style = MaterialTheme.typography.bodyMedium,
-
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
                     }
                 }
@@ -122,7 +132,7 @@ fun AddNomenclature(
                             .padding(16.dp)
 
                     ){Text(
-                        text = "Номенклатура",
+                        text = "Ответственный за инвентарь",
                         style = MaterialTheme.typography.titleMedium
                     )
                         TextField(
@@ -140,8 +150,39 @@ fun AddNomenclature(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
-                        }}
-
+                        }
+                        Text(
+                            text = "Зал",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ) {
+                            Text(
+                                text = if (selectedHallId != -1) halls.find { it.id == selectedHallId }?.name ?: "Выберите зал" else "Выберите зал",
+                                modifier = Modifier
+                                    .clickable { isHallDropdownExpanded = true }
+                            )
+                            DropdownMenu(
+                                expanded = isHallDropdownExpanded,
+                                onDismissRequest = { isHallDropdownExpanded = false },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                halls.forEach { hall ->
+                                    DropdownMenuItem(
+                                        text = { Text(hall.name) },
+                                        onClick = {
+                                            selectedHallId = hall.id
+                                            isHallDropdownExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
 
 
@@ -174,12 +215,15 @@ fun AddNomenclature(
                     // Цвет текста на кнопке
                 ),
                 onClick = {
-                    if (name.isNotBlank()) {
-                        val nomen = com.example.cursova.Nomenclature.Nomenclature(name = name)
-                        viewModel.addNomen(nomen)
+                    if (name.isNotBlank() && selectedHallId != -1) {
+                        val responsible = com.example.cursova.Responsible.Responsible(
+                            name = name,
+                            hallId = selectedHallId
+                        )
+                        viewModel.addResponsible(responsible)
                         navController.popBackStack()
                     } else {
-                        errorMessage = "Наименование должно быть заполнено"
+                        errorMessage = "Наименование и зал должны быть заполнены"
                     }
                 },
                 modifier = Modifier
@@ -192,7 +236,7 @@ fun AddNomenclature(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent, // Цвет фона кнопки
-                      // Цвет текста на кнопке
+                    // Цвет текста на кнопке
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -205,7 +249,5 @@ fun AddNomenclature(
         }
     }
 }
-
-
 
 

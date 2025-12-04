@@ -141,7 +141,7 @@ fun ModulesSection(navController: NavController) {
             iconResId = R.drawable.shoppingcart,
             title = "Управление закупками",
             description = "Документы закупок и номенклатура",
-            sections = 2,
+            sections = 3,
             iconColor = gradient3, // Цвет иконки для третьей карточки
             textColor = colorResource(id = R.color.blueFour),// Цвет текста с количеством разделов для третьей карточки
             textBacColor = colorResource(id = R.color.blueFourBacround),

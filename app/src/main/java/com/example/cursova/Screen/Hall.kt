@@ -36,33 +36,29 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.Nomenclature.Nomenclature
-import com.example.cursova.viewModel.NomenclatureViewModel
-
-
-
-
+import com.example.cursova.Hall.Hall
+import com.example.cursova.viewModel.HallViewModel
 
 @SuppressLint("RestrictedApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Nomenclature(
+fun Hall(
     navController: NavController,
-    viewModel: NomenclatureViewModel = hiltViewModel()
+    viewModel: HallViewModel = hiltViewModel()
 ) {
-    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
+    val halls by viewModel.halls.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Номенклатура") },
+                title = { Text("Залы") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate(Screens.AddNomenclature.route) }) {
+                    IconButton(onClick = { navController.navigate(Screens.AddHall.route) }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 },
@@ -82,10 +78,10 @@ fun Nomenclature(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(nomens) { nomen ->
-                    NomenCard(
-                        nomen = nomen,
-                        onDeleteClick = { viewModel.deleteNomen(nomen) }
+                items(halls) { hall ->
+                    HallCard(
+                        hall = hall,
+                        onDeleteClick = { viewModel.deleteHall(hall) }
                     )
                 }
             }
@@ -94,8 +90,8 @@ fun Nomenclature(
 }
 
 @Composable
-fun NomenCard(
-    nomen: Nomenclature,
+fun HallCard(
+    hall: Hall,
     onDeleteClick: () -> Unit
 ) {
     Card(
@@ -120,7 +116,7 @@ fun NomenCard(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = nomen.name,
+                        text = hall.name,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -130,68 +126,10 @@ fun NomenCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Удалить номенклатуру"
+                        contentDescription = "Удалить зал"
                     )
                 }
             }
         }
     }
 }
-
-
-
-
-
-//@Composable
-//fun Nomenclature(
-//    navController: NavController,
-//    viewModel: NomenclatureViewModel = hiltViewModel()
-//) {
-//    val nomens by viewModel.nomen.collectAsStateWithLifecycle()
-//
-//
-//
-//    LazyColumn (
-//        verticalArrangement = Arrangement.spacedBy(8.dp)
-//    ){
-//        items(nomens){nomen ->
-//            NomenCard(
-//                nomen = nomen,
-//                onDeleteClick = { viewModel.deleteNomen(nomen) } // Передача реального обработчика
-//            )
-//        }
-//    }
-//}
-//
-//@Composable
-//fun NomenCard(
-//    nomen: Nomenclature,
-//    onDeleteClick: () -> Unit
-//){
-//
-//    Card(
-//        modifier = Modifier.fillMaxWidth(),
-//        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ){
-//            Text(
-//                text = nomen.name
-//            )
-//            Text(
-//                text = nomen.type
-//            )
-//            IconButton(onClick = onDeleteClick) {
-//                Icon(
-//                    Icons.Default.Delete,
-//                    contentDescription = "Удалить номенклатуру"
-//                )
-//            }
-//        }
-//    }
-//
-//}

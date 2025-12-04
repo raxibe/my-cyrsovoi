@@ -1,4 +1,4 @@
-package com.example.cursova.data
+package com.example.cursova.Nomenclature
 
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
