@@ -6,18 +6,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -116,7 +125,7 @@ fun AddResponsible(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(160.dp))
+                Spacer(modifier = Modifier.height(80.dp))
 
 
                 Box(
@@ -160,16 +169,38 @@ fun AddResponsible(
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
                         ) {
-                            Text(
-                                text = if (selectedHallId != -1) halls.find { it.id == selectedHallId }?.name ?: "Выберите зал" else "Выберите зал",
+                            OutlinedButton(
+                                onClick = { isHallDropdownExpanded = true },
                                 modifier = Modifier
-                                    .clickable { isHallDropdownExpanded = true }
-                            )
+                                    .fillMaxWidth()
+                                    .height(55.dp)
+                            ) {
+                                Box(
+
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = if (selectedHallId != -1) halls.find { it.id == selectedHallId }?.name ?: "Выберите зал" else "Выберите зал",
+                                        modifier = Modifier
+                                            .padding(top = 11.dp)
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown,
+                                        contentDescription = "Открыть список залов",
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .align(Alignment.TopEnd)
+                                            .padding(start = 35.dp)
+                                    )
+                                }
+                            }
                             DropdownMenu(
                                 expanded = isHallDropdownExpanded,
                                 onDismissRequest = { isHallDropdownExpanded = false },
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .width(IntrinsicSize.Max) // Устанавливаем ширину выпадающего списка равной ширине кнопки
+                                    
                             ) {
                                 halls.forEach { hall ->
                                     DropdownMenuItem(

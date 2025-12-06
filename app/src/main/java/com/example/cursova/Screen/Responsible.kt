@@ -19,6 +19,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,17 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.cursova.Hall.Hall
 import com.example.cursova.R
 import com.example.cursova.Responsible.Responsible
+import com.example.cursova.viewModel.HallViewModel
 import com.example.cursova.viewModel.ResponsibleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Responsible(
     navController: NavController,
-    viewModel: ResponsibleViewModel = hiltViewModel()
+    viewModel: ResponsibleViewModel = hiltViewModel(),
+    hallViewModel: HallViewModel = hiltViewModel()
 ) {
-    val responsible by viewModel.responsibles.collectAsStateWithLifecycle()
+    val responsibles by viewModel.responsibles.collectAsStateWithLifecycle()
+    val halls by hallViewModel.halls.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -76,9 +81,10 @@ fun Responsible(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                items(responsible) { responsible ->
+                items(responsibles) { responsible ->
                     ResponsibleCard(
                         responsible = responsible,
+                        halls = halls,
                         onDeleteClick = { viewModel.deleteResponsible(responsible) }
                     )
                 }
@@ -87,10 +93,10 @@ fun Responsible(
     }
 }
 
-
 @Composable
 fun ResponsibleCard(
     responsible: Responsible,
+    halls: List<Hall>,
     onDeleteClick: () -> Unit
 ) {
     Card(
@@ -112,11 +118,15 @@ fun ResponsibleCard(
                     .padding(20.dp) // Паддинг внутри Card
             ) {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.Start
                 ) {
                     Text(
                         text = responsible.name,
                         fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = halls.find { it.id == responsible.hallId }?.name ?: "Зал не найден",
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 IconButton(
