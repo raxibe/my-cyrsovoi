@@ -17,4 +17,6 @@ sealed class Screens (val route: String){
     object AddServiceCenter : Screens ("service-center-add")
     object Responsible : Screens ("responsible")
     object AddResponsible : Screens ("responsible-add")
+    object PurchaseDocuments : Screens ("purchase-documents")
+    object AddPurchaseDocuments : Screens ("purchase-documents-add")
 }

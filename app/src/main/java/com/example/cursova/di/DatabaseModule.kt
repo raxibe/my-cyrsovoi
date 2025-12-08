@@ -8,6 +8,7 @@ import com.example.cursova.Nomenclature.NomenclatureDao
 import com.example.cursova.Responsible.ResponsibleDao
 import com.example.cursova.ServiceCenter.ServiceCenterDao
 import com.example.cursova.Supplier.SupplierDao
+import com.example.cursova.purchase.PurchaseDocumentDao
 import com.example.cursova.repair.RepairDao
 import dagger.Module
 import dagger.Provides
@@ -60,4 +61,9 @@ object DatabaseModule {
     fun provideResponsibleDao(database: AppDatabase): ResponsibleDao {
         return database.responsibleDao()
     }
+    @Provides
+    fun purchaseDocumentDao(database: AppDatabase): PurchaseDocumentDao {
+        return database.purchaseDocumentDao()
+    }
+
 }

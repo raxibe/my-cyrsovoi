@@ -46,6 +46,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.cursova.Screen.AddHall
 import com.example.cursova.Screen.AddNomenclature
+import com.example.cursova.Screen.AddPurchaseDocument
 import com.example.cursova.Screen.AddRepair
 import com.example.cursova.Screen.AddResponsible
 import com.example.cursova.Screen.AddServiceCenter
@@ -53,6 +54,7 @@ import com.example.cursova.Screen.AddSupplier
 import com.example.cursova.Screen.Hall
 import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
+import com.example.cursova.Screen.PurchaseDocuments
 import com.example.cursova.Screen.Repair
 import com.example.cursova.Screen.RepairManagement
 import com.example.cursova.Screen.Responsible
@@ -135,6 +137,13 @@ class MainActivity : ComponentActivity() {
 
                 composable(Screens.AddResponsible .route) {
                     AddResponsible(navController = navController)
+                }
+                composable(Screens.PurchaseDocuments .route) {
+                    PurchaseDocuments(navController = navController)
+                }
+
+                composable(Screens.AddPurchaseDocuments .route) {
+                    AddPurchaseDocument(navController = navController)
                 }
 
 

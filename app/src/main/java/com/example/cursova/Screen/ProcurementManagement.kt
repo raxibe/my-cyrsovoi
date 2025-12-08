@@ -157,7 +157,7 @@ fun ModuleCard2(
                 .background(Color.White) // Белый фон для содержимого внутри Card
                 .clickable { // Здесь делаем карту кликабельной
                     when (title) {
-                        "Документ закупки" -> navController.navigate(Screens.RepairManagment.route)
+                        "Документ закупки" -> navController.navigate(Screens.PurchaseDocuments.route)
                         "Список номенклатуры" -> navController.navigate(Screens.Nomenclature.route)
                         "Поставщики" -> navController.navigate(Screens.Supplier.route)
 
