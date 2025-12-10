@@ -220,8 +220,9 @@ fun ModuleCard1(
                     when (title) {
                         "Список залов" -> navController.navigate(Screens.Hall.route)
                         "Управление складом" -> navController.navigate(Screens.WarehouseManagement.route)
-                        "Управление закупками" -> navController.navigate(Screens.ProcurementManagement .route)
+                        "Основные средства" -> navController.navigate(Screens.FixedAssets .route)
                         "Ответственные за инвентарь" -> navController.navigate(Screens.Responsible .route)
+                        "Принятие к учету" -> navController.navigate(Screens.AcceptanceDocuments .route)
                         // Добавляйте дополнительные условия для других карт
                     }
                 }

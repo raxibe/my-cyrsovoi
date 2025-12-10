@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 data class PurchaseDocument(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val supplierName: String,
-    val items: String // JSON строка с товарами
+    val items: String, // JSON строка с товарами
+    val documentNumber: String, // Номер документа
+    val creationDate: Long // Дата создания (в миллисекундах)
 )

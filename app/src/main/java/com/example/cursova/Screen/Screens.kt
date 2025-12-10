@@ -19,4 +19,7 @@ sealed class Screens (val route: String){
     object AddResponsible : Screens ("responsible-add")
     object PurchaseDocuments : Screens ("purchase-documents")
     object AddPurchaseDocuments : Screens ("purchase-documents-add")
+    object AcceptanceDocuments : Screens ("acceptance-documents")
+    object AddAcceptanceDocument : Screens ("acceptance-document-add")
+    object FixedAssets : Screens ("fixed-assets")
 }

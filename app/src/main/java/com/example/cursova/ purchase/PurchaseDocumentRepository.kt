@@ -21,4 +21,8 @@ class PurchaseDocumentRepository @Inject constructor(
     suspend fun deleteAllPurchaseDocuments() {
         purchaseDocumentDao.deleteAllPurchaseDocuments()
     }
+
+    suspend fun getMaxDocumentId(): Int? {
+        return purchaseDocumentDao.getMaxDocumentId()
+    }
 }

@@ -32,50 +32,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.cursova.AcceptanceDocument.AcceptanceDocument
 import com.example.cursova.R
-import com.example.cursova.purchase.PurchaseDocument
-import com.example.cursova.viewModel.PurchaseDocumentViewModel
+import com.example.cursova.viewModel.AcceptanceDocumentViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PurchaseDocuments(
+fun AcceptanceDocuments(
     navController: NavController,
-    viewModel: PurchaseDocumentViewModel = hiltViewModel()
+    viewModel: AcceptanceDocumentViewModel = hiltViewModel()
 ) {
-    val purchaseDocuments by viewModel.purchaseDocuments.collectAsStateWithLifecycle()
-
-    // Рассчитываем общую сумму всех товаров
-    val totalSumAll = remember(purchaseDocuments) {
-        purchaseDocuments.sumOf { document ->
-            document.items.lines().sumOf { line ->
-                val parts = line.split(", ")
-                val quantity = parts.find { it.startsWith("Количество:") }?.split(": ")?.get(1)?.toIntOrNull() ?: 0
-                val price = parts.find { it.startsWith("Цена:") }?.split(": ")?.get(1)?.toDoubleOrNull() ?: 0.0
-                quantity * price
-            }
-        }
-    }
+    val acceptanceDocuments by viewModel.acceptanceDocuments.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Документы закупки") },
+                title = { Text("Документы принятия к учету") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate(Screens.AddPurchaseDocuments.route) }) {
+                    IconButton(onClick = { navController.navigate("acceptance-document-add") }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
                     }
                 },
@@ -91,41 +78,23 @@ fun PurchaseDocuments(
                 .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f)
+            if (acceptanceDocuments.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    items(purchaseDocuments) { document ->
-                        // Рассчитываем сумму для каждого документа
-                        val documentSum = document.items.lines().sumOf { line ->
-                            val parts = line.split(", ")
-                            val quantity = parts.find { it.startsWith("Количество:") }?.split(": ")?.get(1)?.toIntOrNull() ?: 0
-                            val price = parts.find { it.startsWith("Цена:") }?.split(": ")?.get(1)?.toDoubleOrNull() ?: 0.0
-                            quantity * price
-                        }
-                        PurchaseDocumentCard(
-                            purchaseDocument = document,
-                            onDeleteClick = { viewModel.deletePurchaseDocument(document) },
-                            totalSum = documentSum
+                    Text("Нет документов принятия к учету")
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(acceptanceDocuments) { document ->
+                        AcceptanceDocumentCard(
+                            acceptanceDocument = document,
+                            onDeleteClick = { viewModel.deleteAcceptanceDocument(document) }
                         )
                     }
-                }
-                // Отображаем общую сумму всех товаров
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Итого к оплате: $totalSumAll руб.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth()
-                    )
                 }
             }
         }
@@ -133,14 +102,13 @@ fun PurchaseDocuments(
 }
 
 @Composable
-fun PurchaseDocumentCard(
-    purchaseDocument: PurchaseDocument,
-    onDeleteClick: () -> Unit,
-    totalSum: Double // Добавляем параметр для суммы документа
+fun AcceptanceDocumentCard(
+    acceptanceDocument: AcceptanceDocument,
+    onDeleteClick: () -> Unit
 ) {
-    val formattedDate = remember(purchaseDocument.creationDate) {
+    val formattedDate = remember(acceptanceDocument.creationDate) {
         SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-            .format(Date(purchaseDocument.creationDate))
+            .format(Date(acceptanceDocument.creationDate))
     }
 
     Card(
@@ -167,7 +135,7 @@ fun PurchaseDocumentCard(
                         .weight(1f)
                 ) {
                     Text(
-                        text = "Документ закупки №${purchaseDocument.documentNumber}",
+                        text = "Документ №${acceptanceDocument.documentNumber}",
                         fontWeight = FontWeight.Bold
                     )
                     Text(
@@ -175,20 +143,14 @@ fun PurchaseDocumentCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "Поставщик: ${purchaseDocument.supplierName}",
+                        text = "Передающее лицо: ${acceptanceDocument.transferPerson}",
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "Товары:\n${purchaseDocument.items}",
+                        text = "Товары:\n${acceptanceDocument.items}",
                         style = MaterialTheme.typography.bodyMedium,
                         softWrap = true,
                         overflow = TextOverflow.Visible
-                    )
-                    Text(
-                        text = "Сумма к оплате: $totalSum руб.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Blue
                     )
                 }
                 IconButton(
@@ -197,7 +159,7 @@ fun PurchaseDocumentCard(
                 ) {
                     Icon(
                         Icons.Default.Delete,
-                        contentDescription = "Удалить документ закупки"
+                        contentDescription = "Удалить документ"
                     )
                 }
             }

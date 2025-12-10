@@ -20,4 +20,7 @@ interface PurchaseDocumentDao {
 
     @Query("DELETE FROM purchase_documents")
     suspend fun deleteAllPurchaseDocuments()
+
+    @Query("SELECT MAX(id) FROM purchase_documents")
+    suspend fun getMaxDocumentId(): Int?
 }

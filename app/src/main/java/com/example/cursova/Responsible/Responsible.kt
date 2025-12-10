@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class Responsible(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val hallId: Int // ID зала, за который отвечает ответственный
+    val hallId: Int
 )

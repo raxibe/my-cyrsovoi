@@ -2,12 +2,15 @@ package com.example.cursova.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.cursova.AcceptanceDocument.AcceptanceDocumentDao
+import com.example.cursova.FixedAsset.FixedAssetDao
 import com.example.cursova.data.AppDatabase
 import com.example.cursova.Hall.HallDao
 import com.example.cursova.Nomenclature.NomenclatureDao
 import com.example.cursova.Responsible.ResponsibleDao
 import com.example.cursova.ServiceCenter.ServiceCenterDao
 import com.example.cursova.Supplier.SupplierDao
+import com.example.cursova.purchase.ItemDao
 import com.example.cursova.purchase.PurchaseDocumentDao
 import com.example.cursova.repair.RepairDao
 import dagger.Module
@@ -64,6 +67,18 @@ object DatabaseModule {
     @Provides
     fun purchaseDocumentDao(database: AppDatabase): PurchaseDocumentDao {
         return database.purchaseDocumentDao()
+    }
+    @Provides
+    fun itemDao(database: AppDatabase): ItemDao {
+        return database.itemDao()
+    }
+    @Provides
+    fun acceptanceDocumentDao(database: AppDatabase): AcceptanceDocumentDao {
+        return database.acceptanceDocumentDao()
+    }
+    @Provides
+    fun fixedAssetDao(database: AppDatabase): FixedAssetDao {
+        return database.fixedAssetDao()
     }
 
 }

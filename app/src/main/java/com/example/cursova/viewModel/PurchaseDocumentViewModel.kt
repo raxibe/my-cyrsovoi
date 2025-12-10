@@ -8,6 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,5 +40,10 @@ class PurchaseDocumentViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAllPurchaseDocuments()
         }
+    }
+
+    suspend fun generateDocumentNumber(): String {
+        val maxId = repository.getMaxDocumentId() ?: 0
+        return "ДОК-${maxId + 1}-${SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())}"
     }
 }

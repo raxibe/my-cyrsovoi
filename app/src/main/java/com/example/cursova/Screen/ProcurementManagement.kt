@@ -69,7 +69,7 @@ fun ProcurementManagement(navController: NavController) {
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "2 раздела",
+                        text = "3 раздела",
                     )
                 }
             }

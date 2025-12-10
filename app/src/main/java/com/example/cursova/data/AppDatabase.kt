@@ -2,6 +2,10 @@ package com.example.cursova.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.cursova.AcceptanceDocument.AcceptanceDocument
+import com.example.cursova.AcceptanceDocument.AcceptanceDocumentDao
+import com.example.cursova.FixedAsset.FixedAsset
+import com.example.cursova.FixedAsset.FixedAssetDao
 import com.example.cursova.Hall.Hall
 import com.example.cursova.Hall.HallDao
 import com.example.cursova.Nomenclature.Nomenclature
@@ -13,6 +17,8 @@ import com.example.cursova.ServiceCenter.ServiceCenter
 import com.example.cursova.ServiceCenter.ServiceCenterDao
 import com.example.cursova.Supplier.Supplier
 import com.example.cursova.Supplier.SupplierDao
+import com.example.cursova.purchase.Item
+import com.example.cursova.purchase.ItemDao
 
 import com.example.cursova.purchase.PurchaseDocument
 import com.example.cursova.purchase.PurchaseDocumentDao
@@ -24,7 +30,8 @@ import com.example.cursova.repair.RepairDao
 @Database(
     entities = [Nomenclature::class, Hall::class, Supplier::class,
         Repair::class, ServiceCenter:: class, Responsible::class,
-        PurchaseDocument::class],
+        PurchaseDocument::class, Item::class, AcceptanceDocument::class,
+               FixedAsset::class],
     version = 1,
     exportSchema = false
 )
@@ -38,6 +45,9 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun serviceCenterDao(): ServiceCenterDao
     abstract fun responsibleDao(): ResponsibleDao
     abstract fun purchaseDocumentDao(): PurchaseDocumentDao
+    abstract fun itemDao(): ItemDao
+    abstract fun acceptanceDocumentDao(): AcceptanceDocumentDao
+    abstract fun fixedAssetDao(): FixedAssetDao
 
 
     companion object {

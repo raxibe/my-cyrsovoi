@@ -35,9 +35,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,29 +57,30 @@ import com.example.cursova.R
 import com.example.cursova.purchase.Item
 
 import com.example.cursova.purchase.PurchaseDocument
+import com.example.cursova.viewModel.ItemViewModel
 import com.example.cursova.viewModel.NomenclatureViewModel
 import com.example.cursova.viewModel.PurchaseDocumentViewModel
 import com.example.cursova.viewModel.SupplierViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddPurchaseDocument(
     navController: NavController,
     viewModel: PurchaseDocumentViewModel = hiltViewModel(),
     supplierViewModel: SupplierViewModel = hiltViewModel(),
-    nomenclatureViewModel: NomenclatureViewModel = hiltViewModel()
+    nomenclatureViewModel: NomenclatureViewModel = hiltViewModel(),
+    itemViewModel: ItemViewModel = hiltViewModel()
 ) {
     var supplierId by remember { mutableStateOf(-1) }
     var isSupplierDropdownExpanded by remember { mutableStateOf(false) }
     var items by remember { mutableStateOf(listOf<Item>()) }
     var errorMessage by remember { mutableStateOf("") }
-
     val suppliers by supplierViewModel.suppliers.collectAsStateWithLifecycle()
     val nomens by nomenclatureViewModel.nomen.collectAsStateWithLifecycle()
-
+    val allItems by itemViewModel.items.collectAsStateWithLifecycle()
     val gradient2 = Brush.linearGradient(
         colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
     )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,7 +97,6 @@ fun AddPurchaseDocument(
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(horizontal = 16.dp)
-
         ) {
             Column(
                 modifier = Modifier
@@ -107,13 +109,11 @@ fun AddPurchaseDocument(
                         .fillMaxWidth()
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp)
-
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.users),
@@ -137,23 +137,18 @@ fun AddPurchaseDocument(
                         )
                     }
                 }
-
                 Spacer(modifier = Modifier.height(20.dp))
-
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.7f)
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp)
-
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-
                     ) {
                         Text(
                             text = "Документ закупки",
@@ -175,7 +170,6 @@ fun AddPurchaseDocument(
                                     .height(55.dp)
                             ) {
                                 Box(
-
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
@@ -183,7 +177,6 @@ fun AddPurchaseDocument(
                                         text = if (supplierId != -1) suppliers.find { it.id == supplierId }?.name
                                             ?: "Выберите поставщика" else "Выберите поставщика",
                                         modifier = Modifier
-
                                             .padding(top = 11.dp)
                                     )
                                     Icon(
@@ -201,7 +194,6 @@ fun AddPurchaseDocument(
                                 onDismissRequest = { isSupplierDropdownExpanded = false },
                                 modifier = Modifier
                                     .width(IntrinsicSize.Max) // Устанавливаем ширину выпадающего списка равной ширине кнопки
-
                             ) {
                                 suppliers.forEach { supplier ->
                                     DropdownMenuItem(
@@ -239,7 +231,9 @@ fun AddPurchaseDocument(
                                     onPriceChange = { newPrice ->
                                         items =
                                             items.map { if (it == item) it.copy(price = newPrice) else it }
-                                    }
+                                    },
+                                    allItems = allItems, // Передаем список всех товаров
+                                    itemViewModel = itemViewModel // Передаем ItemViewModel
                                 )
                             }
                             item {
@@ -257,23 +251,15 @@ fun AddPurchaseDocument(
                         }
                     }
                 }
-
-
             }
         }
-
         Spacer(modifier = Modifier.weight(1f))
-
-
         val gradient5 = Brush.linearGradient(
             colors = listOf(Color(0xD500FF07), Color(0xDF009306))
         )
-
         val gradient6 = Brush.linearGradient(
             colors = listOf(Color(0xFFFA5555), Color(0xFFFF0000))
         )
-
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -290,14 +276,13 @@ fun AddPurchaseDocument(
                         .padding(bottom = 16.dp)
                 )
             }
-            Button(
 
+            val coroutineScope = rememberCoroutineScope()
+            Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent, // Цвет фона кнопки
-                    // Цвет текста на кнопке
+                    containerColor = Color.Transparent,
                 ),
                 onClick = {
-                    // Логика сохранения документа закупки
                     if (supplierId == -1) {
                         errorMessage = "Необходимо выбрать поставщика"
                     } else if (items.isEmpty()) {
@@ -306,12 +291,38 @@ fun AddPurchaseDocument(
                         errorMessage = "Количество и цена должны быть больше нуля"
                     } else {
                         val supplierName = suppliers.find { it.id == supplierId }?.name ?: ""
-                        val purchaseDocument = PurchaseDocument(
-                            supplierName = supplierName,
-                            items = items.joinToString("\n") { it.toString() }
-                        )
-                        viewModel.addPurchaseDocument(purchaseDocument)
-                        navController.popBackStack()
+
+
+
+                        coroutineScope.launch {
+                            // Генерируем номер документа в корутине
+                            val documentNumber = viewModel.generateDocumentNumber()
+                            val creationDate = System.currentTimeMillis()
+
+                            // Сохраняем товары в базу данных
+                            items.forEach { item ->
+                                val existingItem = allItems.find { it.name == item.name }
+                                if (existingItem != null) {
+                                    val updatedItem = existingItem.copy(
+                                        quantity = existingItem.quantity + item.quantity,
+                                        price = item.price
+                                    )
+                                    itemViewModel.updateItem(updatedItem)
+                                } else {
+                                    itemViewModel.addItem(item)
+                                }
+                            }
+
+                            // Сохраняем документ закупки
+                            val purchaseDocument = PurchaseDocument(
+                                supplierName = supplierName,
+                                items = items.joinToString("\n") { it.toString() },
+                                documentNumber = documentNumber,
+                                creationDate = creationDate
+                            )
+                            viewModel.addPurchaseDocument(purchaseDocument)
+                            navController.popBackStack()
+                        }
                     }
                 },
                 modifier = Modifier
@@ -338,106 +349,109 @@ fun AddPurchaseDocument(
     }
 }
 
-@Composable
-fun ItemRow(
-    item: Item,
-    nomens: List<Nomenclature>,
-    onNameChange: (String) -> Unit,
-    onQuantityChange: (Int) -> Unit,
-    onPriceChange: (Double) -> Unit
-) {
-    var isNomenDropdownExpanded by remember { mutableStateOf(false) }
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+    @Composable
+    fun ItemRow(
+        item: Item,
+        nomens: List<Nomenclature>,
+        onNameChange: (String) -> Unit,
+        onQuantityChange: (Int) -> Unit,
+        onPriceChange: (Double) -> Unit,
+        allItems: List<Item>, // Добавляем список всех товаров
+        itemViewModel: ItemViewModel = hiltViewModel() // Добавляем ItemViewModel
     ) {
-        Box(
+        var isNomenDropdownExpanded by remember { mutableStateOf(false) }
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 8.dp)
+                .padding(8.dp)
         ) {
-            OutlinedButton(
-                onClick = { isNomenDropdownExpanded = true },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(55.dp)
+                    .padding(end = 8.dp)
             ) {
-                Box(
-
+                OutlinedButton(
+                    onClick = { isNomenDropdownExpanded = true },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .height(55.dp)
                 ) {
-                    Text(
-                        text = if (item.name.isNotEmpty()) item.name else "Выберите товар",
+                    Box(
                         modifier = Modifier
-                            .padding(top = 11.dp)
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Открыть список товаров",
-                        modifier = Modifier
-                            .size(60.dp)
-                            .align(Alignment.TopEnd)
-                            .padding(start = 35.dp)
-                    )
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (item.name.isNotEmpty()) item.name else "Выберите товар",
+                            modifier = Modifier
+                                .padding(top = 11.dp)
+                        )
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = "Открыть список товаров",
+                            modifier = Modifier
+                                .size(60.dp)
+                                .align(Alignment.TopEnd)
+                                .padding(start = 35.dp)
+                        )
+                    }
+                }
+                DropdownMenu(
+                    expanded = isNomenDropdownExpanded,
+                    onDismissRequest = { isNomenDropdownExpanded = false },
+                    modifier = Modifier.width(IntrinsicSize.Max)
+                ) {
+                    nomens.forEach { nomen ->
+                        DropdownMenuItem(
+                            text = { Text(nomen.name) },
+                            onClick = {
+                                onNameChange(nomen.name)
+                                // Подгружаем данные о товаре из базы, если он уже существует
+                                val existingItem = allItems.find { it.name == nomen.name }
+                                if (existingItem != null) {
+                                    onQuantityChange(1) // или existingItem.quantity, если нужно
+                                    onPriceChange(existingItem.price)
+                                }
+                                isNomenDropdownExpanded = false
+                            }
+                        )
+                    }
                 }
             }
-            DropdownMenu(
-                expanded = isNomenDropdownExpanded,
-                onDismissRequest = { isNomenDropdownExpanded = false },
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = item.quantity.toString(),
+                onValueChange = { newQuantity ->
+                    onQuantityChange(newQuantity.toIntOrNull() ?: 0)
+                },
+                label = { Text("Количество") },
+                shape = RoundedCornerShape(25.dp),
                 modifier = Modifier
-                    .width(IntrinsicSize.Max)
-                // Устанавливаем ширину выпадающего списка равной ширине кнопки
-
-            ) {
-                nomens.forEach { nomen ->
-                    DropdownMenuItem(
-                        text = { Text(nomen.name) },
-                        onClick = {
-                            onNameChange(nomen.name)
-                            isNomenDropdownExpanded = false
-                        }
-                    )
-                }
-            }
+                    .fillMaxWidth()
+                    .padding(end = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedTextField(
+                value = item.price.toString(),
+                shape = RoundedCornerShape(25.dp),
+                onValueChange = { newPrice ->
+                    onPriceChange(newPrice.toDoubleOrNull() ?: 0.0)
+                },
+                label = { Text("Цена") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 8.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Сумма: ${item.quantity * item.price}",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = item.quantity.toString(),
-            onValueChange = { newQuantity ->
-                onQuantityChange(newQuantity.toIntOrNull() ?: 0)
-            },
-            label = { Text("Количество") },
-            shape = RoundedCornerShape(25.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 8.dp)
-
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-            value = item.price.toString(),
-            shape = RoundedCornerShape(25.dp),
-            onValueChange = { newPrice ->
-                onPriceChange(newPrice.toDoubleOrNull() ?: 0.0)
-            },
-            label = { Text("Цена") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 8.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Сумма: ${item.quantity * item.price}",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .fillMaxWidth()
-        )
     }
-}
+
+
 
 
 
