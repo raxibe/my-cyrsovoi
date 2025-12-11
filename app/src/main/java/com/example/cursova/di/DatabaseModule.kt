@@ -10,6 +10,8 @@ import com.example.cursova.Nomenclature.NomenclatureDao
 import com.example.cursova.Responsible.ResponsibleDao
 import com.example.cursova.ServiceCenter.ServiceCenterDao
 import com.example.cursova.Supplier.SupplierDao
+import com.example.cursova.WriteOffDocument.WriteOffDocumentDao
+
 import com.example.cursova.purchase.ItemDao
 import com.example.cursova.purchase.PurchaseDocumentDao
 import com.example.cursova.repair.RepairDao
@@ -23,7 +25,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideAppDatabase(
@@ -33,7 +34,9 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration() // Добавь эту строку
+            .build()
     }
 
     @Provides
@@ -79,6 +82,10 @@ object DatabaseModule {
     @Provides
     fun fixedAssetDao(database: AppDatabase): FixedAssetDao {
         return database.fixedAssetDao()
+    }
+    @Provides
+    fun writeOffDocumentDao(database: AppDatabase): WriteOffDocumentDao {
+        return database.writeOffDocumentDao()
     }
 
 }

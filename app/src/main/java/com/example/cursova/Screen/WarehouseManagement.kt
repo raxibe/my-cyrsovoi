@@ -223,6 +223,7 @@ fun ModuleCard1(
                         "Основные средства" -> navController.navigate(Screens.FixedAssets .route)
                         "Ответственные за инвентарь" -> navController.navigate(Screens.Responsible .route)
                         "Принятие к учету" -> navController.navigate(Screens.AcceptanceDocuments .route)
+                        "Списание" -> navController.navigate(Screens.WriteOffDocuments .route)
                         // Добавляйте дополнительные условия для других карт
                     }
                 }

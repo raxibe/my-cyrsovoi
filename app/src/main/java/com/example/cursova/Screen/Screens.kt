@@ -22,4 +22,7 @@ sealed class Screens (val route: String){
     object AcceptanceDocuments : Screens ("acceptance-documents")
     object AddAcceptanceDocument : Screens ("acceptance-document-add")
     object FixedAssets : Screens ("fixed-assets")
+    object WriteOffDocuments : Screens ("write-off-documents")
+    object AddWriteOffDocument : Screens ("write-off-document-add")
+
 }
