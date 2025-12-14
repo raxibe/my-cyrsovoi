@@ -14,6 +14,10 @@ import com.example.cursova.Hall.Hall
 import com.example.cursova.Hall.HallDao
 import com.example.cursova.Nomenclature.Nomenclature
 import com.example.cursova.Nomenclature.NomenclatureDao
+import com.example.cursova.RepairDocoment.RepairDocument
+import com.example.cursova.RepairDocoment.RepairDocumentDao
+import com.example.cursova.RepairReturnDocument.RepairReturnDocument
+import com.example.cursova.RepairReturnDocument.RepairReturnDocumentDao
 import com.example.cursova.Responsible.Responsible
 import com.example.cursova.Responsible.ResponsibleDao
 
@@ -37,10 +41,9 @@ import com.example.cursova.repair.RepairDao
     entities = [Nomenclature::class, Hall::class, Supplier::class,
         Repair::class, ServiceCenter::class, Responsible::class,
         PurchaseDocument::class, Item::class, AcceptanceDocument::class,
-        FixedAsset::class,
-        WriteOffDocument::class
-               ],
-    version = 2,
+        FixedAsset::class, WriteOffDocument::class, RepairDocument::class,
+                RepairReturnDocument::class],
+    version = 5,
     exportSchema = false
 )
 
@@ -57,6 +60,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun acceptanceDocumentDao(): AcceptanceDocumentDao
     abstract fun fixedAssetDao(): FixedAssetDao
     abstract fun writeOffDocumentDao(): WriteOffDocumentDao
+    abstract fun repairDocumentDao(): RepairDocumentDao
+    abstract fun repairReturnDocumentDao(): RepairReturnDocumentDao
 
 
     companion object {

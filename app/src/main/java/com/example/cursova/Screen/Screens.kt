@@ -24,5 +24,11 @@ sealed class Screens (val route: String){
     object FixedAssets : Screens ("fixed-assets")
     object WriteOffDocuments : Screens ("write-off-documents")
     object AddWriteOffDocument : Screens ("write-off-document-add")
+    object AddRepairDocument : Screens ("repair-document-add")
+    object RepairDocument : Screens ("repair-document")
+    object RepairReturnDocument : Screens ("repair-return-document")
+    object AddRepairReturnDocument : Screens("add_repair_return_document/{repairDocumentId}") {
+        fun createRoute(repairDocumentId: Int) = "add_repair_return_document/$repairDocumentId"
+    }
 
 }

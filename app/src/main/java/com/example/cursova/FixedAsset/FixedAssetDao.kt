@@ -27,4 +27,8 @@ interface FixedAssetDao {
 
     @Query("UPDATE fixed_assets SET status = :status WHERE id = :id")
     suspend fun updateFixedAssetStatus(id: Int, status: String)
+
+
+
+
 }

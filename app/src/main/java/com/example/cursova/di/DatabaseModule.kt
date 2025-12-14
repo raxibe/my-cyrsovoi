@@ -7,6 +7,8 @@ import com.example.cursova.FixedAsset.FixedAssetDao
 import com.example.cursova.data.AppDatabase
 import com.example.cursova.Hall.HallDao
 import com.example.cursova.Nomenclature.NomenclatureDao
+import com.example.cursova.RepairDocoment.RepairDocumentDao
+import com.example.cursova.RepairReturnDocument.RepairReturnDocumentDao
 import com.example.cursova.Responsible.ResponsibleDao
 import com.example.cursova.ServiceCenter.ServiceCenterDao
 import com.example.cursova.Supplier.SupplierDao
@@ -86,6 +88,14 @@ object DatabaseModule {
     @Provides
     fun writeOffDocumentDao(database: AppDatabase): WriteOffDocumentDao {
         return database.writeOffDocumentDao()
+    }
+    @Provides
+    fun repairDocumentDao(database: AppDatabase): RepairDocumentDao {
+        return database.repairDocumentDao()
+    }
+    @Provides
+    fun repairReturnDocumentDao(database: AppDatabase): RepairReturnDocumentDao {
+        return database.repairReturnDocumentDao()
     }
 
 }

@@ -1,11 +1,16 @@
 package com.example.cursova.Screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
+
 import androidx.compose.foundation.layout.IntrinsicSize
+
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -53,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddWriteOffDocument(
     navController: NavController,
-    writeOffDocumentViewModel: WriteOffDocumentViewModel = hiltViewModel(),
+    viewModel: WriteOffDocumentViewModel = hiltViewModel(),
     fixedAssetViewModel: FixedAssetViewModel = hiltViewModel()
 ) {
     var fixedAssetId by remember { mutableStateOf(-1) }
@@ -62,9 +68,15 @@ fun AddWriteOffDocument(
     var errorMessage by remember { mutableStateOf("") }
 
     val fixedAssets by fixedAssetViewModel.fixedAssets.collectAsStateWithLifecycle()
+    val unsuitableFixedAssets = remember(fixedAssets) {
+        val filteredAssets = fixedAssets.filter { it.status == "непригодно к использованию" }
+        Log.d("UnsuitableAssets", "Filtered assets: $filteredAssets") // Логирование
+        filteredAssets
+    }
+
     val coroutineScope = rememberCoroutineScope()
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
     )
 
     Column(
@@ -102,8 +114,8 @@ fun AddWriteOffDocument(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.users),
-                            contentDescription = "Документ списания",
+                            painter = painterResource(id = R.drawable.usercheck),
+                            contentDescription = "Списание",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
@@ -123,12 +135,12 @@ fun AddWriteOffDocument(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+
+                Spacer(modifier = Modifier.height(80.dp))
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.7f)
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp)
                 ) {
@@ -137,7 +149,6 @@ fun AddWriteOffDocument(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        // Основное средство
                         Text(
                             text = "Основное средство",
                             style = MaterialTheme.typography.titleMedium
@@ -151,7 +162,7 @@ fun AddWriteOffDocument(
                                 onClick = { isFixedAssetDropdownExpanded = true },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(55.dp)
+                                    .height(65.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
@@ -159,7 +170,7 @@ fun AddWriteOffDocument(
                                 ) {
                                     Text(
                                         text = if (fixedAssetId != -1) {
-                                            val asset = fixedAssets.find { it.id == fixedAssetId }
+                                            val asset = unsuitableFixedAssets.find { it.id == fixedAssetId }
                                             "${asset?.name ?: ""} (${asset?.inventoryNumber ?: ""})"
                                         } else {
                                             "Выберите основное средство"
@@ -177,27 +188,33 @@ fun AddWriteOffDocument(
                                     )
                                 }
                             }
-                            DropdownMenu (
+                            DropdownMenu(
                                 expanded = isFixedAssetDropdownExpanded,
                                 onDismissRequest = { isFixedAssetDropdownExpanded = false },
                                 modifier = Modifier
                                     .width(IntrinsicSize.Max)
                             ) {
-                                fixedAssets.forEach { asset ->
+                                if (unsuitableFixedAssets.isEmpty()) {
                                     DropdownMenuItem(
-                                        text = { Text("${asset.name} (${asset.inventoryNumber})") },
-                                        onClick = {
-                                            fixedAssetId = asset.id
-                                            isFixedAssetDropdownExpanded = false
-                                        }
+                                        text = { Text("Нет непригодных основных средств") },
+                                        onClick = { isFixedAssetDropdownExpanded = false }
                                     )
+                                } else {
+                                    unsuitableFixedAssets.forEach { asset ->
+                                        DropdownMenuItem(
+                                            text = { Text("${asset.name} (${asset.inventoryNumber})") },
+                                            onClick = {
+                                                fixedAssetId = asset.id
+                                                isFixedAssetDropdownExpanded = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Причина списания
                         Text(
                             text = "Причина списания",
                             style = MaterialTheme.typography.titleMedium
@@ -210,6 +227,14 @@ fun AddWriteOffDocument(
                                 .padding(top = 8.dp),
                             label = { Text("Причина") }
                         )
+                        if (errorMessage.isNotEmpty()) {
+                            Text(
+                                text = errorMessage,
+                                color = Color.Red,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -230,16 +255,6 @@ fun AddWriteOffDocument(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
-            }
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
@@ -252,7 +267,7 @@ fun AddWriteOffDocument(
                     } else {
                         coroutineScope.launch {
                             try {
-                                val documentNumber = writeOffDocumentViewModel.generateDocumentNumber()
+                                val documentNumber = viewModel.generateDocumentNumber()
                                 val creationDate = System.currentTimeMillis()
 
                                 val writeOffDocument = WriteOffDocument(
@@ -262,8 +277,7 @@ fun AddWriteOffDocument(
                                     reason = reason
                                 )
 
-                                writeOffDocumentViewModel.addWriteOffDocument(writeOffDocument)
-
+                                viewModel.addWriteOffDocument(writeOffDocument)
                                 navController.popBackStack()
                             } catch (e: Exception) {
                                 errorMessage = "Ошибка при создании документа: ${e.message}"
@@ -293,3 +307,6 @@ fun AddWriteOffDocument(
         }
     }
 }
+
+
+

@@ -50,4 +50,15 @@ class FixedAssetViewModel @Inject constructor(
             repository.updateFixedAssetStatus(id, status)
         }
     }
+
+    suspend fun generateUniqueInventoryNumber(): String {
+        val usedNumbers = fixedAssets.value.mapNotNull { it.inventoryNumber.toIntOrNull() }.toSet()
+        val random = (1000..9999).random()
+        return if (usedNumbers.contains(random)) {
+            generateUniqueInventoryNumber() // Рекурсивно вызываем, если номер уже используется
+        } else {
+            random.toString()
+        }
+    }
+
 }

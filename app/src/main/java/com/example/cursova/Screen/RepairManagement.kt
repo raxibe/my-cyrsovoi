@@ -171,8 +171,8 @@ fun ModuleCard(
                 .clickable { // Здесь делаем карту кликабельной
                     when (title) {
                         "Список видов ремонта" -> navController.navigate(Screens.Repair.route)
-                        "Управление складом" -> navController.navigate(Screens.WarehouseManagement.route)
-                        "Управление закупками" -> navController.navigate(Screens.ProcurementManagement.route)
+                        "Сдача в ремонт" -> navController.navigate(Screens.RepairDocument .route)
+                        "Возврат с ремонта" -> navController.navigate(Screens.RepairReturnDocument .route)
                         "Сервисные центры" -> navController.navigate(Screens.ServiceCenter.route)
                         // Добавляйте дополнительные условия для других карт
                     }

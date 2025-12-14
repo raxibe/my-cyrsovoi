@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,32 +15,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.example.cursova.viewModel.AcceptanceDocumentViewModel
-import com.example.cursova.viewModel.ItemViewModel
-import com.example.cursova.viewModel.ResponsibleViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,49 +43,53 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.cursova.AcceptanceDocument.AcceptanceDocument
-import com.example.cursova.FixedAsset.FixedAsset
+import androidx.navigation.NavController
 import com.example.cursova.R
-import com.example.cursova.purchase.Item
+import com.example.cursova.RepairDocoment.RepairDocument
 import com.example.cursova.viewModel.FixedAssetViewModel
+import com.example.cursova.viewModel.RepairDocumentViewModel
+import com.example.cursova.viewModel.RepairViewModel
+import com.example.cursova.viewModel.ServiceCenterViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddAcceptanceDocument(
+fun AddRepairDocument(
     navController: NavController,
-    acceptanceDocumentViewModel: AcceptanceDocumentViewModel = hiltViewModel(),
-    responsibleViewModel: ResponsibleViewModel = hiltViewModel(),
-    itemViewModel: ItemViewModel = hiltViewModel(),
-    fixedAssetViewModel: FixedAssetViewModel = hiltViewModel()
-
+    repairDocumentViewModel: RepairDocumentViewModel = hiltViewModel(),
+    fixedAssetViewModel: FixedAssetViewModel = hiltViewModel(),
+    serviceCenterViewModel: ServiceCenterViewModel = hiltViewModel(),
+    repairViewModel: RepairViewModel = hiltViewModel()
 ) {
-
-
-
-    // Переменные для передающего лица
-    var transferPersonId by remember { mutableStateOf(-1) }
-    var isTransferPersonDropdownExpanded by remember { mutableStateOf(false) }
-
-    // Переменные для МОЛ
-    var responsibleId by remember { mutableStateOf(-1) }
-    var isResponsibleDropdownExpanded by remember { mutableStateOf(false) }
-
-    // Переменные для товара
-    var selectedItemId by remember { mutableStateOf(-1) }
-    var isItemDropdownExpanded by remember { mutableStateOf(false) }
-
+    var fixedAssetId by remember { mutableStateOf(-1) }
+    var serviceCenterId by remember { mutableStateOf(-1) }
+    var repairTypeId by remember { mutableStateOf(-1) }
+    var repairCost by remember { mutableStateOf("") }
+    var repairDuration by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
 
-    val responsibles by responsibleViewModel.responsibles.collectAsStateWithLifecycle()
-    val items by itemViewModel.items.collectAsStateWithLifecycle()
+    var isFixedAssetDropdownExpanded by remember { mutableStateOf(false) }
+    var isServiceCenterDropdownExpanded by remember { mutableStateOf(false) }
+    var isRepairTypeDropdownExpanded by remember { mutableStateOf(false) }
+
+    val fixedAssets by fixedAssetViewModel.fixedAssets.collectAsStateWithLifecycle()
+    val serviceCenters by serviceCenterViewModel.serviceCenters.collectAsStateWithLifecycle()
+    val repairTypes by repairViewModel.repair.collectAsStateWithLifecycle()
+
+    val unsuitableFixedAssets = remember(fixedAssets) {
+        fixedAssets.filter { it.status == "непригодно к использованию" }
+    }
 
     val coroutineScope = rememberCoroutineScope()
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
     )
 
     Column(
@@ -126,30 +124,29 @@ fun AddAcceptanceDocument(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.users),
-                            contentDescription = "Документ принятия к учету",
+                            painter = painterResource(id = R.drawable.usercheck),
+                            contentDescription = "Ремонт",
                             modifier = Modifier
                                 .size(48.dp)
-                                .align(Alignment.CenterHorizontally)
                                 .background(gradient2, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Добавление документа принятия к учету",
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            text = "Добавление документа ремонта",
+                            style = MaterialTheme.typography.headlineMedium
                         )
                         Text(
-                            text = "Создание нового документа принятия к учету",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                            text = "Создание нового документа ремонта",
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Box(
@@ -163,10 +160,11 @@ fun AddAcceptanceDocument(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
+                            .verticalScroll(rememberScrollState()) // Добавлена прокрутка
                     ) {
-                        // Передающее лицо
+                        // Выбор основного средства
                         Text(
-                            text = "Передающее лицо",
+                            text = "Основное средство",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Box(
@@ -175,42 +173,114 @@ fun AddAcceptanceDocument(
                                 .padding(top = 8.dp)
                         ) {
                             OutlinedButton(
-                                onClick = { isTransferPersonDropdownExpanded = true },
+                                onClick = { isFixedAssetDropdownExpanded = true },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(60.dp)
+                                    .height(65.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = if (transferPersonId != -1) responsibles.find { it.id == transferPersonId }?.name ?: "Выберите передающее лицо" else "Выберите передающее лицо",
+                                        text = if (fixedAssetId != -1) {
+                                            val asset = unsuitableFixedAssets.find { it.id == fixedAssetId }
+                                            "${asset?.name ?: ""} (${asset?.inventoryNumber ?: ""})"
+                                        } else {
+                                            "Выберите основное средство"
+                                        },
                                         modifier = Modifier
                                             .padding(top = 11.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список передающих лиц",
+                                        contentDescription = "Открыть список основных средств",
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .padding(start = 35.dp)
-                                            .align(Alignment.TopEnd)
+                                            .align(Alignment.CenterEnd)
+                                            .padding(end = 8.dp)
                                     )
                                 }
                             }
                             DropdownMenu(
-                                expanded = isTransferPersonDropdownExpanded,
-                                onDismissRequest = { isTransferPersonDropdownExpanded = false },
+                                expanded = isFixedAssetDropdownExpanded,
+                                onDismissRequest = { isFixedAssetDropdownExpanded = false },
                                 modifier = Modifier
                                     .width(IntrinsicSize.Max)
                             ) {
-                                responsibles.forEach { responsible ->
+                                if (unsuitableFixedAssets.isEmpty()) {
                                     DropdownMenuItem(
-                                        text = { Text(responsible.name) },
+                                        text = { Text("Нет непригодных основных средств") },
+                                        onClick = { isFixedAssetDropdownExpanded = false }
+                                    )
+                                } else {
+                                    unsuitableFixedAssets.forEach { asset ->
+                                        DropdownMenuItem(
+                                            text = { Text("${asset.name} (${asset.inventoryNumber})") },
+                                            onClick = {
+                                                fixedAssetId = asset.id
+                                                isFixedAssetDropdownExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Выбор сервисного центра
+                        Text(
+                            text = "Сервисный центр",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = { isServiceCenterDropdownExpanded = true },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(65.dp)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = if (serviceCenterId != -1) {
+                                            val center = serviceCenters.find { it.id == serviceCenterId }
+                                            center?.name ?: "Выберите сервисный центр"
+                                        } else {
+                                            "Выберите сервисный центр"
+                                        },
+                                        modifier = Modifier
+                                            .padding(top = 11.dp)
+                                    )
+                                    Icon(
+                                        imageVector = Icons.Default.ArrowDropDown,
+                                        contentDescription = "Открыть список сервисных центров",
+                                        modifier = Modifier
+                                            .size(60.dp)
+                                            .align(Alignment.CenterEnd)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
+                            }
+                            DropdownMenu(
+                                expanded = isServiceCenterDropdownExpanded,
+                                onDismissRequest = { isServiceCenterDropdownExpanded = false },
+                                modifier = Modifier
+                                    .width(IntrinsicSize.Max)
+                            ) {
+                                serviceCenters.forEach { center ->
+                                    DropdownMenuItem(
+                                        text = { Text(center.name) },
                                         onClick = {
-                                            transferPersonId = responsible.id
-                                            isTransferPersonDropdownExpanded = false
+                                            serviceCenterId = center.id
+                                            isServiceCenterDropdownExpanded = false
                                         }
                                     )
                                 }
@@ -219,9 +289,9 @@ fun AddAcceptanceDocument(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Материально-ответственное лицо
+                        // Выбор типа ремонта
                         Text(
-                            text = "Материально-ответственное лицо",
+                            text = "Тип ремонта",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Box(
@@ -230,42 +300,47 @@ fun AddAcceptanceDocument(
                                 .padding(top = 8.dp)
                         ) {
                             OutlinedButton(
-                                onClick = { isResponsibleDropdownExpanded = true },
+                                onClick = { isRepairTypeDropdownExpanded = true },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(55.dp)
+                                    .height(65.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = if (responsibleId != -1) responsibles.find { it.id == responsibleId }?.name ?: "Выберите МОЛ" else "Выберите МОЛ",
+                                        text = if (repairTypeId != -1) {
+                                            val type = repairTypes.find { it.id == repairTypeId }
+                                            type?.name ?: "Выберите тип ремонта"
+                                        } else {
+                                            "Выберите тип ремонта"
+                                        },
                                         modifier = Modifier
                                             .padding(top = 11.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список МОЛ",
+                                        contentDescription = "Открыть список типов ремонта",
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .padding(start = 35.dp)
-                                            .align(Alignment.TopEnd)
+                                            .align(Alignment.CenterEnd)
+                                            .padding(end = 8.dp)
                                     )
                                 }
                             }
                             DropdownMenu(
-                                expanded = isResponsibleDropdownExpanded,
-                                onDismissRequest = { isResponsibleDropdownExpanded = false },
+                                expanded = isRepairTypeDropdownExpanded,
+                                onDismissRequest = { isRepairTypeDropdownExpanded = false },
                                 modifier = Modifier
                                     .width(IntrinsicSize.Max)
                             ) {
-                                responsibles.forEach { responsible ->
+                                repairTypes.forEach { type ->
                                     DropdownMenuItem(
-                                        text = { Text(responsible.name) },
+                                        text = { Text(type.name) },
                                         onClick = {
-                                            responsibleId = responsible.id
-                                            isResponsibleDropdownExpanded = false
+                                            repairTypeId = type.id
+                                            isRepairTypeDropdownExpanded = false
                                         }
                                     )
                                 }
@@ -274,58 +349,37 @@ fun AddAcceptanceDocument(
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        // Товар
+                        // Поле для стоимости ремонта
                         Text(
-                            text = "Товар",
+                            text = "Стоимость ремонта",
                             style = MaterialTheme.typography.titleMedium
                         )
-                        Box(
+                        OutlinedTextField(
+                            value = repairCost,
+                            onValueChange = { repairCost = it },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 8.dp)
-                        ) {
-                            OutlinedButton(
-                                onClick = { isItemDropdownExpanded = true },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(55.dp)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                ) {
-                                    Text(
-                                        text = if (selectedItemId != -1) items.find { it.id == selectedItemId }?.name ?: "Выберите товар" else "Выберите товар",
-                                        modifier = Modifier
-                                            .padding(top = 11.dp)
-                                    )
-                                    Icon(
-                                        imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список товаров",
-                                        modifier = Modifier
-                                            .size(60.dp)
-                                            .padding(start = 35.dp)
-                                            .align(Alignment.TopEnd)
-                                    )
-                                }
-                            }
-                            DropdownMenu(
-                                expanded = isItemDropdownExpanded,
-                                onDismissRequest = { isItemDropdownExpanded = false },
-                                modifier = Modifier
-                                    .width(IntrinsicSize.Max)
-                            ) {
-                                items.forEach { item ->
-                                    DropdownMenuItem(
-                                        text = { Text("${item.name} (${item.quantity} шт.)") },
-                                        onClick = {
-                                            selectedItemId = item.id
-                                            isItemDropdownExpanded = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
+                                .padding(top = 8.dp),
+                            label = { Text("Стоимость") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Поле для сроков ремонта
+                        Text(
+                            text = "Сроки ремонта (в днях)",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        OutlinedTextField(
+                            value = repairDuration,
+                            onValueChange = { repairDuration = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            label = { Text("Количество дней") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
                     }
                 }
             }
@@ -353,67 +407,52 @@ fun AddAcceptanceDocument(
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp)
+                        .padding(bottom = 8.dp)
                 )
             }
+
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                 ),
                 onClick = {
-                    if (transferPersonId == -1) {
-                        errorMessage = "Выберите передающее лицо"
-                    } else if (responsibleId == -1) {
-                        errorMessage = "Выберите материально-ответственное лицо"
-                    } else if (selectedItemId == -1) {
-                        errorMessage = "Выберите товар"
+                    if (fixedAssetId == -1) {
+                        errorMessage = "Выберите основное средство"
+                    } else if (serviceCenterId == -1) {
+                        errorMessage = "Выберите сервисный центр"
+                    } else if (repairTypeId == -1) {
+                        errorMessage = "Выберите тип ремонта"
+                    } else if (repairCost.isEmpty()) {
+                        errorMessage = "Укажите стоимость ремонта"
+                    } else if (repairDuration.isEmpty()) {
+                        errorMessage = "Укажите сроки ремонта"
                     } else {
                         coroutineScope.launch {
-                            val selectedItem = items.find { it.id == selectedItemId }
-                            if (selectedItem == null) {
-                                errorMessage = "Выбранный товар не найден"
-                            } else if (selectedItem.quantity <= 0) {
-                                errorMessage = "Недостаточно товара на складе"
-                            } else {
-                                try {
-                                    val documentNumber = acceptanceDocumentViewModel.generateDocumentNumber()
-                                    val creationDate = System.currentTimeMillis()
+                            try {
+                                val documentNumber = repairDocumentViewModel.generateDocumentNumber()
+                                val creationDate = System.currentTimeMillis()
 
-                                    val acceptanceDocument = AcceptanceDocument(
-                                        documentNumber = documentNumber,
-                                        creationDate = creationDate,
-                                        transferPerson = responsibles.find { it.id == transferPersonId }?.name ?: "",
-                                        responsibleId = responsibleId,
-                                        items = selectedItem.name
-                                    )
+                                val repairDocument = RepairDocument(
+                                    documentNumber = documentNumber,
+                                    creationDate = creationDate,
+                                    fixedAssetId = fixedAssetId,
+                                    serviceCenterId = serviceCenterId,
+                                    repairTypeId = repairTypeId,
+                                    repairCost = repairCost.toDouble(),
+                                    repairDuration = repairDuration.toInt()
+                                )
 
-                                    // Генерация уникального инвентарного номера
-                                    val inventoryNumber = fixedAssetViewModel.generateUniqueInventoryNumber()
-
-                                    val fixedAsset = FixedAsset(
-                                        name = selectedItem.name,
-                                        inventoryNumber = inventoryNumber,
-                                        responsibleId = responsibleId,
-                                        acceptanceDocumentId = 0,
-                                        status = "в зале"
-                                    )
-
-                                    acceptanceDocumentViewModel.addAcceptanceDocument(acceptanceDocument, fixedAsset)
-
-                                    val updatedItem = selectedItem.copy(quantity = selectedItem.quantity - 1)
-                                    itemViewModel.updateItem(updatedItem)
-
-                                    navController.popBackStack()
-                                } catch (e: Exception) {
-                                    errorMessage = "Ошибка при создании документа: ${e.message}"
-                                }
+                                repairDocumentViewModel.addRepairDocument(repairDocument)
+                                navController.popBackStack()
+                            } catch (e: Exception) {
+                                errorMessage = "Ошибка при создании документа: ${e.message}"
                             }
                         }
                     }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(bottom = 8.dp)
                     .background(gradient5, shape = RoundedCornerShape(50.dp))
             ) {
                 Text("Создать")
@@ -425,7 +464,7 @@ fun AddAcceptanceDocument(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 25.dp)
+                    .padding(bottom = 16.dp)
                     .background(gradient6, shape = RoundedCornerShape(50.dp))
             ) {
                 Text("Отмена")
@@ -433,3 +472,6 @@ fun AddAcceptanceDocument(
         }
     }
 }
+
+
+

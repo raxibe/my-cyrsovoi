@@ -81,6 +81,7 @@ fun AddPurchaseDocument(
     val gradient2 = Brush.linearGradient(
         colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
     )
+
     Column(
         modifier = Modifier
             .fillMaxSize()

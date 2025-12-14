@@ -41,9 +41,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.cursova.FixedAsset.FixedAsset
 import com.example.cursova.Screen.AcceptanceDocuments
 import com.example.cursova.Screen.AddAcceptanceDocument
@@ -51,19 +53,23 @@ import com.example.cursova.Screen.AddHall
 import com.example.cursova.Screen.AddNomenclature
 import com.example.cursova.Screen.AddPurchaseDocument
 import com.example.cursova.Screen.AddRepair
+import com.example.cursova.Screen.AddRepairDocument
+import com.example.cursova.Screen.AddRepairReturnDocument
 import com.example.cursova.Screen.AddResponsible
 import com.example.cursova.Screen.AddServiceCenter
 import com.example.cursova.Screen.AddSupplier
 import com.example.cursova.Screen.AddWriteOffDocument
-
-
 import com.example.cursova.Screen.FixedAssets
+
+
 import com.example.cursova.Screen.Hall
 import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
 import com.example.cursova.Screen.PurchaseDocuments
 import com.example.cursova.Screen.Repair
+import com.example.cursova.Screen.RepairDocument
 import com.example.cursova.Screen.RepairManagement
+import com.example.cursova.Screen.RepairReturnDocument
 import com.example.cursova.Screen.Responsible
 import com.example.cursova.Screen.Screens
 
@@ -170,6 +176,28 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Screens.AddWriteOffDocument .route) {
                     AddWriteOffDocument(navController = navController)
+                }
+                composable(Screens.AddRepairDocument .route) {
+                    AddRepairDocument(navController = navController)
+                }
+                composable(Screens.RepairDocument .route) {
+                    RepairDocument(navController = navController)
+                }
+                composable(Screens.RepairReturnDocument .route) {
+                    RepairReturnDocument(navController = navController)
+                }
+                composable(Screens.AddRepairDocument.route) {
+                    AddRepairDocument(navController = navController)
+                }
+                composable(
+                    route = Screens.AddRepairReturnDocument.route,
+                    arguments = listOf(navArgument("repairDocumentId") { type = NavType.IntType })
+                ) { backStackEntry ->
+                    val repairDocumentId = backStackEntry.arguments?.getInt("repairDocumentId") ?: -1
+                    AddRepairReturnDocument(
+                        navController = navController,
+                        repairDocumentId = repairDocumentId
+                    )
                 }
 
 
