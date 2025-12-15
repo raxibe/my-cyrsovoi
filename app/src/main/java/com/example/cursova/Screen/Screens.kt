@@ -30,5 +30,7 @@ sealed class Screens (val route: String){
     object AddRepairReturnDocument : Screens("add_repair_return_document/{repairDocumentId}") {
         fun createRoute(repairDocumentId: Int) = "add_repair_return_document/$repairDocumentId"
     }
+    object InventoryDocumentsScreen : Screens ("inventory-documents-screen")
+    object AddInventoryDocumentScreen : Screens("inventory-documents-add")
 
 }

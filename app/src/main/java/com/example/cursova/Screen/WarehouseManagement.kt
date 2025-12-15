@@ -219,7 +219,7 @@ fun ModuleCard1(
                 .clickable { // Здесь делаем карту кликабельной
                     when (title) {
                         "Список залов" -> navController.navigate(Screens.Hall.route)
-                        "Управление складом" -> navController.navigate(Screens.WarehouseManagement.route)
+                        "Инвентаризация" -> navController.navigate(Screens.InventoryDocumentsScreen .route)
                         "Основные средства" -> navController.navigate(Screens.FixedAssets .route)
                         "Ответственные за инвентарь" -> navController.navigate(Screens.Responsible .route)
                         "Принятие к учету" -> navController.navigate(Screens.AcceptanceDocuments .route)

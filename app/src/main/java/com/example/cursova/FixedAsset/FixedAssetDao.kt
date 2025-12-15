@@ -29,6 +29,10 @@ interface FixedAssetDao {
     suspend fun updateFixedAssetStatus(id: Int, status: String)
 
 
+    @Query("SELECT * FROM fixed_assets")
+    suspend fun getAllFixedAssetsList(): List<FixedAsset>
+
+
 
 
 }

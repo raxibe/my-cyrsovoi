@@ -16,5 +16,7 @@ class FixedAssetRepository @Inject constructor(
 
     suspend fun deleteAllFixedAssets() = fixedAssetDao.deleteAllFixedAssets()
 
+    suspend fun getAllFixedAssetsList(): List<FixedAsset> = fixedAssetDao.getAllFixedAssetsList()
+
     suspend fun updateFixedAssetStatus(id: Int, status: String) = fixedAssetDao.updateFixedAssetStatus(id, status)
 }

@@ -350,107 +350,107 @@ fun AddPurchaseDocument(
     }
 }
 
-    @Composable
-    fun ItemRow(
-        item: Item,
-        nomens: List<Nomenclature>,
-        onNameChange: (String) -> Unit,
-        onQuantityChange: (Int) -> Unit,
-        onPriceChange: (Double) -> Unit,
-        allItems: List<Item>, // Добавляем список всех товаров
-        itemViewModel: ItemViewModel = hiltViewModel() // Добавляем ItemViewModel
+@Composable
+fun ItemRow(
+    item: Item,
+    nomens: List<Nomenclature>,
+    onNameChange: (String) -> Unit,
+    onQuantityChange: (Int) -> Unit,
+    onPriceChange: (Double) -> Unit,
+    allItems: List<Item>, // Добавляем список всех товаров
+    itemViewModel: ItemViewModel = hiltViewModel() // Добавляем ItemViewModel
+) {
+    var isNomenDropdownExpanded by remember { mutableStateOf(false) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
     ) {
-        var isNomenDropdownExpanded by remember { mutableStateOf(false) }
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(end = 8.dp)
         ) {
-            Box(
+            OutlinedButton(
+                onClick = { isNomenDropdownExpanded = true },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 8.dp)
+                    .height(55.dp)
             ) {
-                OutlinedButton(
-                    onClick = { isNomenDropdownExpanded = true },
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(55.dp)
                 ) {
-                    Box(
+                    Text(
+                        text = if (item.name.isNotEmpty()) item.name else "Выберите товар",
                         modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = if (item.name.isNotEmpty()) item.name else "Выберите товар",
-                            modifier = Modifier
-                                .padding(top = 11.dp)
-                        )
-                        Icon(
-                            imageVector = Icons.Default.ArrowDropDown,
-                            contentDescription = "Открыть список товаров",
-                            modifier = Modifier
-                                .size(60.dp)
-                                .align(Alignment.TopEnd)
-                                .padding(start = 35.dp)
-                        )
-                    }
-                }
-                DropdownMenu(
-                    expanded = isNomenDropdownExpanded,
-                    onDismissRequest = { isNomenDropdownExpanded = false },
-                    modifier = Modifier.width(IntrinsicSize.Max)
-                ) {
-                    nomens.forEach { nomen ->
-                        DropdownMenuItem(
-                            text = { Text(nomen.name) },
-                            onClick = {
-                                onNameChange(nomen.name)
-                                // Подгружаем данные о товаре из базы, если он уже существует
-                                val existingItem = allItems.find { it.name == nomen.name }
-                                if (existingItem != null) {
-                                    onQuantityChange(1) // или existingItem.quantity, если нужно
-                                    onPriceChange(existingItem.price)
-                                }
-                                isNomenDropdownExpanded = false
-                            }
-                        )
-                    }
+                            .padding(top = 11.dp)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = "Открыть список товаров",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .align(Alignment.TopEnd)
+                            .padding(start = 35.dp)
+                    )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = item.quantity.toString(),
-                onValueChange = { newQuantity ->
-                    onQuantityChange(newQuantity.toIntOrNull() ?: 0)
-                },
-                label = { Text("Количество") },
-                shape = RoundedCornerShape(25.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = item.price.toString(),
-                shape = RoundedCornerShape(25.dp),
-                onValueChange = { newPrice ->
-                    onPriceChange(newPrice.toDoubleOrNull() ?: 0.0)
-                },
-                label = { Text("Цена") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Сумма: ${item.quantity * item.price}",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+            DropdownMenu(
+                expanded = isNomenDropdownExpanded,
+                onDismissRequest = { isNomenDropdownExpanded = false },
+                modifier = Modifier.width(IntrinsicSize.Max)
+            ) {
+                nomens.forEach { nomen ->
+                    DropdownMenuItem(
+                        text = { Text(nomen.name) },
+                        onClick = {
+                            onNameChange(nomen.name)
+                            // Подгружаем данные о товаре из базы, если он уже существует
+                            val existingItem = allItems.find { it.name == nomen.name }
+                            if (existingItem != null) {
+                                onQuantityChange(1) // или existingItem.quantity, если нужно
+                                onPriceChange(existingItem.price)
+                            }
+                            isNomenDropdownExpanded = false
+                        }
+                    )
+                }
+            }
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = item.quantity.toString(),
+            onValueChange = { newQuantity ->
+                onQuantityChange(newQuantity.toIntOrNull() ?: 0)
+            },
+            label = { Text("Количество") },
+            shape = RoundedCornerShape(25.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        OutlinedTextField(
+            value = item.price.toString(),
+            shape = RoundedCornerShape(25.dp),
+            onValueChange = { newPrice ->
+                onPriceChange(newPrice.toDoubleOrNull() ?: 0.0)
+            },
+            label = { Text("Цена") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Сумма: ${item.quantity * item.price}",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+        )
     }
+}
 
 
 

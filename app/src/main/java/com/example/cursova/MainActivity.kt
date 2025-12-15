@@ -50,6 +50,8 @@ import com.example.cursova.FixedAsset.FixedAsset
 import com.example.cursova.Screen.AcceptanceDocuments
 import com.example.cursova.Screen.AddAcceptanceDocument
 import com.example.cursova.Screen.AddHall
+import com.example.cursova.Screen.AddInventoryDocumentScreen
+
 import com.example.cursova.Screen.AddNomenclature
 import com.example.cursova.Screen.AddPurchaseDocument
 import com.example.cursova.Screen.AddRepair
@@ -63,6 +65,9 @@ import com.example.cursova.Screen.FixedAssets
 
 
 import com.example.cursova.Screen.Hall
+import com.example.cursova.Screen.InventoryDocumentsScreen
+
+
 import com.example.cursova.Screen.Nomenclature
 import com.example.cursova.Screen.ProcurementManagement
 import com.example.cursova.Screen.PurchaseDocuments
@@ -198,6 +203,13 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         repairDocumentId = repairDocumentId
                     )
+                }
+
+                composable(Screens.AddInventoryDocumentScreen.route) {
+                    AddInventoryDocumentScreen(navController = navController)
+                }
+                composable(Screens.InventoryDocumentsScreen.route) {
+                    InventoryDocumentsScreen(navController = navController)
                 }
 
 

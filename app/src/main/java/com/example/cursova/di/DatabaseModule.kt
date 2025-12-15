@@ -6,6 +6,8 @@ import com.example.cursova.AcceptanceDocument.AcceptanceDocumentDao
 import com.example.cursova.FixedAsset.FixedAssetDao
 import com.example.cursova.data.AppDatabase
 import com.example.cursova.Hall.HallDao
+import com.example.cursova.Inventory.InventoryDocumentDao
+import com.example.cursova.Inventory.InventoryItemDao
 import com.example.cursova.Nomenclature.NomenclatureDao
 import com.example.cursova.RepairDocoment.RepairDocumentDao
 import com.example.cursova.RepairReturnDocument.RepairReturnDocumentDao
@@ -96,6 +98,14 @@ object DatabaseModule {
     @Provides
     fun repairReturnDocumentDao(database: AppDatabase): RepairReturnDocumentDao {
         return database.repairReturnDocumentDao()
+    }
+    @Provides
+    fun inventoryDocumentDao(database: AppDatabase): InventoryDocumentDao {
+        return database.inventoryDocumentDao()
+    }
+    @Provides
+    fun inventoryItemDao(database: AppDatabase): InventoryItemDao {
+        return database.inventoryItemDao()
     }
 
 }
