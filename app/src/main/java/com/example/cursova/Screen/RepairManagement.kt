@@ -2,6 +2,7 @@ package com.example.cursova.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,10 +16,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -35,49 +41,52 @@ import com.example.cursova.R
 fun RepairManagement(
     navController: NavController
 ) {
-    Box(modifier = Modifier
-        .background(colorResource(id = R.color.фонпервогоэкрана))) {
+    Box(
+        modifier = Modifier
+            .background(colorResource(id = R.color.фонпервогоэкрана))
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderSection()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp, start = 12.dp)
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+                Spacer(modifier = Modifier.width(5.dp))
+                Column {
+                    Text(
+                        modifier = Modifier,
+                        text = "Управление ремонтом",
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "4 раздела",
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            ModulesSection()
+            ModulesSection(navController)
         }
     }
 }
 
-@Composable
-fun HeaderSection() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 60.dp, start = 6.dp)
-    ) {
-
-        Spacer(modifier = Modifier.width(5.dp))
-        Column {
-            Text(
-                modifier = Modifier,
-                text = "Управление ремонтом",
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "4 раздела",
-            )
-        }
-    }
-}
 
 @Composable
-fun ModulesSection() {
+fun ModulesSection(navController: NavController) {
 
     val gradient = Brush.linearGradient(
         colors = listOf(Color(0xFF9B65FF), Color(0xFF5D00FF)),
@@ -99,11 +108,13 @@ fun ModulesSection() {
 
 
     Column {
+
         ModuleCard(
             iconResId = R.drawable.list,
             title = "Список видов ремонта",
             description = "Просмотр и управление видами ремонта",
             iconColor = gradient, // Фиолетовый цвет иконки
+            navController = navController
 
 
         )
@@ -113,6 +124,7 @@ fun ModulesSection() {
             title = "Сдача в ремонт",
             description = "Оформление документов на сдачу",
             iconColor = gradient2, // Оранжевый цвет иконки
+            navController = navController
 
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -121,21 +133,30 @@ fun ModulesSection() {
             title = "Возврат с ремонта",
             description = "Приемка оборудования из ремонта",
             iconColor = gradient3, // Зеленый цвет иконки
+            navController = navController
 
         )
         Spacer(modifier = Modifier.height(16.dp))
+
         ModuleCard(
             iconResId = R.drawable.building,
             title = "Сервисные центры",
             description = "Список и контакты сервисных центров",
             iconColor = gradient4, // Синий цвет иконки
+            navController = navController
 
         )
     }
 }
 
 @Composable
-fun ModuleCard(iconResId: Int, title: String, description: String, iconColor: Brush,) {
+fun ModuleCard(
+    iconResId: Int,
+    title: String,
+    description: String,
+    iconColor: Brush,
+    navController: NavController
+) {
     Card(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(15.dp))
@@ -147,6 +168,15 @@ fun ModuleCard(iconResId: Int, title: String, description: String, iconColor: Br
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White) // Белый фон для содержимого внутри Card
+                .clickable { // Здесь делаем карту кликабельной
+                    when (title) {
+                        "Список видов ремонта" -> navController.navigate(Screens.Repair.route)
+                        "Сдача в ремонт" -> navController.navigate(Screens.RepairDocument .route)
+                        "Возврат с ремонта" -> navController.navigate(Screens.RepairReturnDocument .route)
+                        "Сервисные центры" -> navController.navigate(Screens.ServiceCenter.route)
+                        // Добавляйте дополнительные условия для других карт
+                    }
+                }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -163,7 +193,8 @@ fun ModuleCard(iconResId: Int, title: String, description: String, iconColor: Br
                     Image(
                         painter = painterResource(id = iconResId),
                         contentDescription = "Module Icon",
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .padding(7.dp)
                     )
                 }

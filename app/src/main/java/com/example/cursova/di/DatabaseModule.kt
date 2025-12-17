@@ -1,0 +1,111 @@
+package com.example.cursova.di
+
+import android.content.Context
+import androidx.room.Room
+import com.example.cursova.AcceptanceDocument.AcceptanceDocumentDao
+import com.example.cursova.FixedAsset.FixedAssetDao
+import com.example.cursova.data.AppDatabase
+import com.example.cursova.Hall.HallDao
+import com.example.cursova.Inventory.InventoryDocumentDao
+import com.example.cursova.Inventory.InventoryItemDao
+import com.example.cursova.Nomenclature.NomenclatureDao
+import com.example.cursova.RepairDocoment.RepairDocumentDao
+import com.example.cursova.RepairReturnDocument.RepairReturnDocumentDao
+import com.example.cursova.Responsible.ResponsibleDao
+import com.example.cursova.ServiceCenter.ServiceCenterDao
+import com.example.cursova.Supplier.SupplierDao
+import com.example.cursova.WriteOffDocument.WriteOffDocumentDao
+
+import com.example.cursova.purchase.ItemDao
+import com.example.cursova.purchase.PurchaseDocumentDao
+import com.example.cursova.repair.RepairDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object DatabaseModule {
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        @ApplicationContext context: Context
+    ): AppDatabase {
+        return Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            AppDatabase.DATABASE_NAME
+        )
+            .fallbackToDestructiveMigration() // Добавь эту строку
+            .build()
+    }
+
+    @Provides
+    fun provideStudentDao(database: AppDatabase): NomenclatureDao {
+        return database.nomentDao()
+    }
+    @Provides
+    fun provideHallDao(database: AppDatabase): HallDao {
+        return database.hallDao()
+    }
+
+    @Provides
+    fun provideSupplierDao(database: AppDatabase): SupplierDao {
+        return database.supplierDao()
+    }
+
+    @Provides
+    fun provideRepairDao(database: AppDatabase): RepairDao {
+        return database.repairDao()
+    }
+
+    @Provides
+    fun provideServiceCenterDao(database: AppDatabase): ServiceCenterDao {
+        return database.serviceCenterDao()
+    }
+
+    @Provides
+    fun provideResponsibleDao(database: AppDatabase): ResponsibleDao {
+        return database.responsibleDao()
+    }
+    @Provides
+    fun purchaseDocumentDao(database: AppDatabase): PurchaseDocumentDao {
+        return database.purchaseDocumentDao()
+    }
+    @Provides
+    fun itemDao(database: AppDatabase): ItemDao {
+        return database.itemDao()
+    }
+    @Provides
+    fun acceptanceDocumentDao(database: AppDatabase): AcceptanceDocumentDao {
+        return database.acceptanceDocumentDao()
+    }
+    @Provides
+    fun fixedAssetDao(database: AppDatabase): FixedAssetDao {
+        return database.fixedAssetDao()
+    }
+    @Provides
+    fun writeOffDocumentDao(database: AppDatabase): WriteOffDocumentDao {
+        return database.writeOffDocumentDao()
+    }
+    @Provides
+    fun repairDocumentDao(database: AppDatabase): RepairDocumentDao {
+        return database.repairDocumentDao()
+    }
+    @Provides
+    fun repairReturnDocumentDao(database: AppDatabase): RepairReturnDocumentDao {
+        return database.repairReturnDocumentDao()
+    }
+    @Provides
+    fun inventoryDocumentDao(database: AppDatabase): InventoryDocumentDao {
+        return database.inventoryDocumentDao()
+    }
+    @Provides
+    fun inventoryItemDao(database: AppDatabase): InventoryItemDao {
+        return database.inventoryItemDao()
+    }
+
+}

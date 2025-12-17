@@ -16,8 +16,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,14 +45,41 @@ fun WarehouseManagement(navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderSection1()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 60.dp, start = 12.dp)
+            ) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+                Spacer(modifier = Modifier.width(5.dp))
+                Column {
+                    Text(
+                        modifier = Modifier,
+                        text = "Управление складом",
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "6 разделов",
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            ModulesSection(navController)
+            ModulesSection1(navController)
         }
     }
 }
+
+
+
 
 @Composable
 fun HeaderSection1() {
@@ -75,7 +106,7 @@ fun HeaderSection1() {
 }
 
 @Composable
-fun ModulesSection(navController: NavController) {
+fun ModulesSection1(navController: NavController) {
 
     val gradient = Brush.linearGradient(
         colors = listOf(Color(0xDA008DFF), Color(0xE40029FF))
@@ -108,6 +139,7 @@ fun ModulesSection(navController: NavController) {
             title = "Список залов",
             description = "Управление спортивными залами",
             iconColor = gradient, // Фиолетовый цвет иконки
+            navController = navController
 
 
         )
@@ -117,6 +149,7 @@ fun ModulesSection(navController: NavController) {
             title = "Инвентаризация",
             description = "Проведение и учет инвентаризации",
             iconColor = gradient2, // Оранжевый цвет иконки
+            navController = navController
 
 
         )
@@ -126,6 +159,7 @@ fun ModulesSection(navController: NavController) {
             title = "Основные средства",
             description = "Учет основных средств",
             iconColor = gradient3, // Зеленый цвет иконки
+            navController = navController
 
 
         )
@@ -135,6 +169,7 @@ fun ModulesSection(navController: NavController) {
             title = "Ответственные за инвентарь",
             description = "Список материально ответственных лиц",
             iconColor = gradient4, // Синий цвет иконки
+            navController = navController
 
 
         )
@@ -144,6 +179,7 @@ fun ModulesSection(navController: NavController) {
             title = "Принятие к учету",
             description = "Оприходование нового инвентаря",
             iconColor = gradient5, // Пурпурный цвет иконки
+            navController = navController
 
 
         )
@@ -153,6 +189,7 @@ fun ModulesSection(navController: NavController) {
             title = "Списание",
             description = "Списание инвентаря",
             iconColor = gradient6, // Розовый цвет иконки
+            navController = navController
 
 
         )
@@ -165,6 +202,7 @@ fun ModuleCard1(
     title: String,
     description: String,
     iconColor: Brush,
+    navController: NavController
 
 ) {
     Card(
@@ -178,6 +216,17 @@ fun ModuleCard1(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White) // Белый фон для содержимого внутри Card
+                .clickable { // Здесь делаем карту кликабельной
+                    when (title) {
+                        "Список залов" -> navController.navigate(Screens.Hall.route)
+                        "Инвентаризация" -> navController.navigate(Screens.InventoryDocumentsScreen .route)
+                        "Основные средства" -> navController.navigate(Screens.FixedAssets .route)
+                        "Ответственные за инвентарь" -> navController.navigate(Screens.Responsible .route)
+                        "Принятие к учету" -> navController.navigate(Screens.AcceptanceDocuments .route)
+                        "Списание" -> navController.navigate(Screens.WriteOffDocuments .route)
+                        // Добавляйте дополнительные условия для других карт
+                    }
+                }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
