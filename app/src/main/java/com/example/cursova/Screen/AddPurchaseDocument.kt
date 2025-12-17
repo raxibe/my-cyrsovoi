@@ -78,8 +78,8 @@ fun AddPurchaseDocument(
     val suppliers by supplierViewModel.suppliers.collectAsStateWithLifecycle()
     val nomens by nomenclatureViewModel.nomen.collectAsStateWithLifecycle()
     val allItems by itemViewModel.items.collectAsStateWithLifecycle()
-    val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+    val gradient = Brush.linearGradient(
+        colors = listOf(Color(0xDA008DFF), Color(0xE40029FF))
     )
 
     Column(
@@ -117,12 +117,12 @@ fun AddPurchaseDocument(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.users),
+                            painter = painterResource(id = R.drawable.filetext),
                             contentDescription = "Документ закупки",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .background(gradient2, shape = RoundedCornerShape(7.dp))
+                                .background(gradient, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -425,7 +425,7 @@ fun ItemRow(
                 onQuantityChange(newQuantity.toIntOrNull() ?: 0)
             },
             label = { Text("Количество") },
-            shape = RoundedCornerShape(25.dp),
+            shape = RoundedCornerShape(28.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 8.dp)
@@ -433,7 +433,7 @@ fun ItemRow(
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = item.price.toString(),
-            shape = RoundedCornerShape(25.dp),
+            shape = RoundedCornerShape(28.dp),
             onValueChange = { newPrice ->
                 onPriceChange(newPrice.toDoubleOrNull() ?: 0.0)
             },

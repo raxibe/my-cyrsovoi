@@ -69,8 +69,9 @@ fun AddInventoryDocumentScreen(
     var errorMessage by remember { mutableStateOf("") }
 
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
-    )
+        colors = listOf(Color(0xFF9B65FF), Color(0xFF5D00FF)),
+
+        )
     val gradient5 = Brush.linearGradient(
         colors = listOf(Color(0xD500FF07), Color(0xDF009306))
     )
@@ -113,7 +114,7 @@ fun AddInventoryDocumentScreen(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.users), // Замените на ваш ресурс
+                            painter = painterResource(id = R.drawable.clipboardlist), // Замените на ваш ресурс
                             contentDescription = "Документ инвентаризации",
                             modifier = Modifier
                                 .size(48.dp)
@@ -134,63 +135,69 @@ fun AddInventoryDocumentScreen(
                         )
                     }
                 }
-            }
-        }
 
-        Spacer(modifier = Modifier.height(20.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.7f)
-                .background(Color.White, shape = RoundedCornerShape(16.dp))
-                .padding(horizontal = 16.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "Список оборудования:",
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Spacer(modifier = Modifier.height(20.dp))
 
-                LazyColumn(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .fillMaxHeight(0.7f)
+                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp)
                 ) {
-                    items(fixedAssets) { fixedAsset ->
-                        var isPresent by rememberSaveable { mutableStateOf(false) }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            text = "Список оборудования:",
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                        Row(
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .weight(1f)
                         ) {
-                            Checkbox(
-                                checked = isPresent,
-                                onCheckedChange = { newValue ->
-                                    isPresent = newValue
+                            items(fixedAssets) { fixedAsset ->
+                                var isPresent by rememberSaveable { mutableStateOf(false) }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Checkbox(
+                                        checked = isPresent,
+                                        onCheckedChange = { newValue ->
+                                            isPresent = newValue
+                                        }
+                                    )
+                                    Column {
+                                        Text(
+                                            text = fixedAsset.name,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        Text(
+                                            text = "Инвентарный номер: ${fixedAsset.inventoryNumber}",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
                                 }
-                            )
-                            Column {
-                                Text(
-                                    text = fixedAsset.name,
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                Text(
-                                    text = "Инвентарный номер: ${fixedAsset.inventoryNumber}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
                             }
                         }
                     }
                 }
+
+
+
             }
         }
+
+
 
         Spacer(modifier = Modifier.weight(1f))
 

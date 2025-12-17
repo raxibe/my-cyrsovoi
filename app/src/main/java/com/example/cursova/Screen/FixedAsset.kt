@@ -71,6 +71,9 @@ fun FixedAssets(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.фонпервогоэкрана)
+                )
 //
             )
         }
@@ -78,6 +81,7 @@ fun FixedAssets(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
 
         ) {

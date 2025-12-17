@@ -113,20 +113,7 @@ fun PurchaseDocuments(
                     }
                 }
                 // Отображаем общую сумму всех товаров
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .padding(16.dp)
-                ) {
-                    Text(
-                        text = "Итого к оплате: $totalSumAll руб.",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.End,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+
             }
         }
     }
@@ -191,15 +178,7 @@ fun PurchaseDocumentCard(
                         color = Color.Blue
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Удалить документ закупки"
-                    )
-                }
+
             }
         }
     }

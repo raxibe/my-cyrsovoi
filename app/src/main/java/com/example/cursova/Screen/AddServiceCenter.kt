@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -125,10 +126,11 @@ fun AddServiceCenter(
                         text = "Сервисный центр",
                         style = MaterialTheme.typography.titleMedium
                     )
-                        TextField(
+                        OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Наименование*") },
+                            shape = RoundedCornerShape(28.dp),
+                            label = { Text("Наименование") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)

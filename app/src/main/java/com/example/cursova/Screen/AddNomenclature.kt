@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -97,12 +98,12 @@ fun AddNomenclature(
                             text = "Добавление номенклатуры",
                             style = MaterialTheme.typography.headlineMedium,
 
-                        )
+                            )
                         Text(
                             text = "Создание новой позиции в каталоге товаров",
                             style = MaterialTheme.typography.bodyMedium,
 
-                        )
+                            )
                     }
                 }
 
@@ -121,14 +122,16 @@ fun AddNomenclature(
                             .fillMaxWidth()
                             .padding(16.dp)
 
-                    ){Text(
-                        text = "Номенклатура",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                        TextField(
+                    ) {
+                        Text(
+                            text = "Номенклатура",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Наименование*") },
+                            shape = RoundedCornerShape(28.dp),
+                            label = { Text("Наименование") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
@@ -140,7 +143,8 @@ fun AddNomenclature(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(top = 8.dp)
                             )
-                        }}
+                        }
+                    }
 
                 }
 
@@ -149,7 +153,6 @@ fun AddNomenclature(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
 
 
         val gradient5 = Brush.linearGradient(
@@ -192,7 +195,7 @@ fun AddNomenclature(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent, // Цвет фона кнопки
-                      // Цвет текста на кнопке
+                    // Цвет текста на кнопке
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier

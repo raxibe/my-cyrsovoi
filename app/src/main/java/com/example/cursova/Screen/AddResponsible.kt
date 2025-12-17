@@ -26,6 +26,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -61,8 +62,8 @@ fun AddResponsible(
 
     val halls by hallViewModel.halls.collectAsStateWithLifecycle()
 
-    val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+    val gradient4 = Brush.linearGradient(
+        colors = listOf(Color(0xFF5CE5D4), Color(0xFF06BDAA))
     )
 
     Column(
@@ -108,7 +109,7 @@ fun AddResponsible(
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .background(gradient2, shape = RoundedCornerShape(7.dp))
+                                .background(gradient4, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -144,10 +145,11 @@ fun AddResponsible(
                         text = "Ответственный за инвентарь",
                         style = MaterialTheme.typography.titleMedium
                     )
-                        TextField(
+                        OutlinedTextField(
                             value = name,
                             onValueChange = { name = it },
-                            label = { Text("Наименование*") },
+                            shape = RoundedCornerShape(28.dp),
+                            label = { Text("Ответственный") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)

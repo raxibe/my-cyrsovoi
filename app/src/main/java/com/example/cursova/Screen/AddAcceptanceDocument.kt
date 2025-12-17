@@ -90,8 +90,8 @@ fun AddAcceptanceDocument(
     val items by itemViewModel.items.collectAsStateWithLifecycle()
 
     val coroutineScope = rememberCoroutineScope()
-    val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+    val gradient5 = Brush.linearGradient(
+        colors = listOf(Color(0xD500FF07), Color(0xDF009306))
     )
 
     Column(
@@ -129,12 +129,12 @@ fun AddAcceptanceDocument(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.users),
+                            painter = painterResource(id = R.drawable.plus),
                             contentDescription = "Документ принятия к учету",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .background(gradient2, shape = RoundedCornerShape(7.dp))
+                                .background(gradient5, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))

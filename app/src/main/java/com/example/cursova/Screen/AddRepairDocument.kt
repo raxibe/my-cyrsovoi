@@ -89,8 +89,9 @@ fun AddRepairDocument(
 
     val coroutineScope = rememberCoroutineScope()
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
-    )
+        colors = listOf(Color(0xEEFF9800), Color(0xFFFF3A00)),
+
+        )
 
     Column(
         modifier = Modifier
@@ -128,7 +129,7 @@ fun AddRepairDocument(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.usercheck),
+                            painter = painterResource(id = R.drawable.upload),
                             contentDescription = "Ремонт",
                             modifier = Modifier
                                 .size(48.dp)
@@ -137,11 +138,11 @@ fun AddRepairDocument(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "Добавление документа ремонта",
+                            text = "Добавление документа сдачи в ремонт",
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Text(
-                            text = "Создание нового документа ремонта",
+                            text = "Создание нового документа сдачи в ремонт",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -190,15 +191,15 @@ fun AddRepairDocument(
                                             "Выберите основное средство"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 9.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список основных средств",
+                                        contentDescription = "Открыть список залов",
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .align(Alignment.CenterEnd)
-                                            .padding(end = 8.dp)
+                                            .align(Alignment.TopEnd)
+                                            .padding(start = 35.dp)
                                     )
                                 }
                             }
@@ -254,18 +255,18 @@ fun AddRepairDocument(
                                             val center = serviceCenters.find { it.id == serviceCenterId }
                                             center?.name ?: "Выберите сервисный центр"
                                         } else {
-                                            "Выберите сервисный центр"
+                                            "Выберите сервисный \nцентр"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 9.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список сервисных центров",
+                                        contentDescription = "Открыть список залов",
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .align(Alignment.CenterEnd)
-                                            .padding(end = 8.dp)
+                                            .align(Alignment.TopEnd)
+                                            .padding(start = 35.dp)
                                     )
                                 }
                             }
@@ -317,15 +318,15 @@ fun AddRepairDocument(
                                             "Выберите тип ремонта"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 14.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список типов ремонта",
+                                        contentDescription = "Открыть список залов",
                                         modifier = Modifier
                                             .size(60.dp)
-                                            .align(Alignment.CenterEnd)
-                                            .padding(end = 8.dp)
+                                            .align(Alignment.TopEnd)
+                                            .padding(start = 35.dp)
                                     )
                                 }
                             }
@@ -357,8 +358,10 @@ fun AddRepairDocument(
                         OutlinedTextField(
                             value = repairCost,
                             onValueChange = { repairCost = it },
+                            shape = RoundedCornerShape(28.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
+
                                 .padding(top = 8.dp),
                             label = { Text("Стоимость") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -374,6 +377,7 @@ fun AddRepairDocument(
                         OutlinedTextField(
                             value = repairDuration,
                             onValueChange = { repairDuration = it },
+                            shape = RoundedCornerShape(28.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),

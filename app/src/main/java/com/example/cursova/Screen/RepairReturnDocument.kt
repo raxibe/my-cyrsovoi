@@ -64,6 +64,11 @@ fun RepairReturnDocument(
     val serviceCenters by serviceCenterViewModel.serviceCenters.collectAsStateWithLifecycle()
     val repairTypes by repairViewModel.repair.collectAsStateWithLifecycle()
 
+    // Сортируем документы возврата с ремонта по дате создания в обратном порядке
+    val sortedRepairReturnDocuments = remember(repairReturnDocuments) {
+        repairReturnDocuments.sortedByDescending { it.creationDate }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,11 +78,7 @@ fun RepairReturnDocument(
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
-                actions = {
-                    IconButton(onClick = { navController.navigate(Screens.AddRepairReturnDocument .route) }) {
-                        Icon(Icons.Default.Add, contentDescription = "Add")
-                    }
-                },
+
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.фонпервогоэкрана)
                 )
@@ -90,7 +91,7 @@ fun RepairReturnDocument(
                 .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
-            if (repairReturnDocuments.isEmpty()) {
+            if (sortedRepairReturnDocuments.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -101,7 +102,7 @@ fun RepairReturnDocument(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(repairReturnDocuments) { document ->
+                    items(sortedRepairReturnDocuments) { document ->
                         val repairDocument = repairDocuments.find { it.id == document.repairDocumentId }
                         val fixedAsset = fixedAssets.find { it.id == repairDocument?.fixedAssetId }
                         val serviceCenter = serviceCenters.find { it.id == repairDocument?.serviceCenterId }
@@ -122,6 +123,8 @@ fun RepairReturnDocument(
         }
     }
 }
+
+
 
 
 @Composable
@@ -196,15 +199,7 @@ fun RepairReturnDocumentCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Удалить документ"
-                    )
-                }
+
             }
         }
     }

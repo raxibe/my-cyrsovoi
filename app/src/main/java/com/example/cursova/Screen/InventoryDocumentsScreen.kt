@@ -51,6 +51,11 @@ fun InventoryDocumentsScreen(
 ) {
     val inventoryDocuments by inventoryViewModel.inventoryDocuments.collectAsStateWithLifecycle()
 
+    // Сортируем документы по дате создания в обратном порядке
+    val sortedInventoryDocuments = remember(inventoryDocuments) {
+        inventoryDocuments.sortedByDescending { it.creationDate }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,7 +82,7 @@ fun InventoryDocumentsScreen(
                 .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
-            if (inventoryDocuments.isEmpty()) {
+            if (sortedInventoryDocuments.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -88,7 +93,7 @@ fun InventoryDocumentsScreen(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(inventoryDocuments) { document ->
+                    items(sortedInventoryDocuments) { document ->
                         val formattedDate = remember(document.creationDate) {
                             SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
                                 .format(Date(document.creationDate))
@@ -96,6 +101,7 @@ fun InventoryDocumentsScreen(
                         InventoryDocumentCard(
                             document = document,
                             formattedDate = formattedDate,
+
                             onDeleteClick = {
                                 inventoryViewModel.deleteInventoryDocument(document)
                             }
@@ -145,15 +151,7 @@ fun InventoryDocumentCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Удалить документ инвентаризации"
-                    )
-                }
+
             }
         }
     }

@@ -54,6 +54,11 @@ fun WriteOffDocuments(
     val writeOffDocuments by viewModel.writeOffDocuments.collectAsStateWithLifecycle()
     val fixedAssets by fixedAssetViewModel.fixedAssets.collectAsStateWithLifecycle()
 
+    // Сортируем документы по дате создания в обратном порядке
+    val sortedWriteOffDocuments = remember(writeOffDocuments) {
+        writeOffDocuments.sortedByDescending { it.creationDate }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,7 +85,7 @@ fun WriteOffDocuments(
                 .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
-            if (writeOffDocuments.isEmpty()) {
+            if (sortedWriteOffDocuments.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -91,7 +96,7 @@ fun WriteOffDocuments(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(writeOffDocuments) { document ->
+                    items(sortedWriteOffDocuments) { document ->
                         val fixedAsset = fixedAssets.find { it.id == document.fixedAssetId }
                         WriteOffDocumentCard(
                             writeOffDocument = document,
@@ -158,15 +163,7 @@ fun WriteOffDocumentCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Удалить документ"
-                    )
-                }
+
             }
         }
     }

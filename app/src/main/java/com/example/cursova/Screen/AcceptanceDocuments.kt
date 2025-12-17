@@ -52,6 +52,11 @@ fun AcceptanceDocuments(
 ) {
     val acceptanceDocuments by viewModel.acceptanceDocuments.collectAsStateWithLifecycle()
 
+    // Сортируем документы по дате создания в обратном порядке
+    val sortedAcceptanceDocuments = remember(acceptanceDocuments) {
+        acceptanceDocuments.sortedByDescending { it.creationDate }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,7 +83,7 @@ fun AcceptanceDocuments(
                 .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
-            if (acceptanceDocuments.isEmpty()) {
+            if (sortedAcceptanceDocuments.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -89,7 +94,7 @@ fun AcceptanceDocuments(
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(acceptanceDocuments) { document ->
+                    items(sortedAcceptanceDocuments) { document ->
                         AcceptanceDocumentCard(
                             acceptanceDocument = document,
                             onDeleteClick = { viewModel.deleteAcceptanceDocument(document) }
@@ -153,15 +158,7 @@ fun AcceptanceDocumentCard(
                         overflow = TextOverflow.Visible
                     )
                 }
-                IconButton(
-                    onClick = onDeleteClick,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                ) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Удалить документ"
-                    )
-                }
+
             }
         }
     }

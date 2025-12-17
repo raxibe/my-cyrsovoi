@@ -63,19 +63,25 @@ fun RepairDocument(
     val serviceCenters by serviceCenterViewModel.serviceCenters.collectAsStateWithLifecycle()
     val repairTypes by repairViewModel.repair.collectAsStateWithLifecycle()
 
+    // Фильтруем и сортируем активные документы ремонта по дате создания в обратном порядке
     val activeRepairDocuments = remember(repairDocuments) {
-        repairDocuments.filter { it.status == "в ремонте" }
+        repairDocuments
+            .filter { it.status == "в ремонте" }
+            .sortedByDescending { it.creationDate }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Документы ремонта") },
+                title = { Text("Документы сдачи в ремонт ремонта") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.фонпервогоэкрана)
+                ),
                 actions = {
                     IconButton(onClick = { navController.navigate(Screens.AddRepairDocument.route) }) {
                         Icon(Icons.Default.Add, contentDescription = "Add")
@@ -87,6 +93,7 @@ fun RepairDocument(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(colorResource(id = R.color.фонпервогоэкрана))
                 .padding(paddingValues)
         ) {
             if (activeRepairDocuments.isEmpty()) {
@@ -205,16 +212,7 @@ fun RepairDocumentCard(
                             tint = Color.Green
                         )
                     }
-                    IconButton(
-                        onClick = onDeleteClick,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Icon(
-                            Icons.Default.Delete,
-                            contentDescription = "Удалить документ",
-                            tint = Color.Red
-                        )
-                    }
+                    
                 }
             }
         }

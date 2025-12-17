@@ -75,9 +75,10 @@ fun AddWriteOffDocument(
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFFB64EC5), Color(0xFFA21AB9))
+    val gradient6 = Brush.linearGradient(
+        colors = listOf(Color(0xFFFA5555), Color(0xFFFF0000))
     )
+
 
     Column(
         modifier = Modifier
@@ -114,12 +115,12 @@ fun AddWriteOffDocument(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.usercheck),
+                            painter = painterResource(id = R.drawable.minus),
                             contentDescription = "Списание",
                             modifier = Modifier
                                 .size(48.dp)
                                 .align(Alignment.CenterHorizontally)
-                                .background(gradient2, shape = RoundedCornerShape(7.dp))
+                                .background(gradient6, shape = RoundedCornerShape(7.dp))
                                 .padding(7.dp)
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -222,6 +223,7 @@ fun AddWriteOffDocument(
                         OutlinedTextField(
                             value = reason,
                             onValueChange = { reason = it },
+                            shape = RoundedCornerShape(28.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),
