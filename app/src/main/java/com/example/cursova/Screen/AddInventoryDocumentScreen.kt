@@ -1,5 +1,10 @@
 package com.example.cursova.Screen
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -55,9 +61,11 @@ import com.example.cursova.Inventory.InventoryItem
 import com.example.cursova.R
 import com.example.cursova.viewModel.FixedAssetViewModel
 import com.example.cursova.viewModel.InventoryViewModel
+import com.journeyapps.barcodescanner.CaptureActivity
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun AddInventoryDocumentScreen(
     navController: NavController,
@@ -66,18 +74,29 @@ fun AddInventoryDocumentScreen(
 ) {
     val fixedAssets by fixedAssetViewModel.fixedAssets.collectAsStateWithLifecycle()
     val coroutineScope = rememberCoroutineScope()
-    var errorMessage by remember { mutableStateOf("") }
+    var scannedInventoryNumber by remember { mutableStateOf("") }
 
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF9B65FF), Color(0xFF5D00FF)),
-
-        )
+        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
+    )
     val gradient5 = Brush.linearGradient(
         colors = listOf(Color(0xD500FF07), Color(0xDF009306))
     )
     val gradient6 = Brush.linearGradient(
         colors = listOf(Color(0xFFFA5555), Color(0xFFFF0000))
     )
+
+    // Функция для запуска сканера QR-кода
+    val context = LocalContext.current
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val qrCodeResult = data?.getStringExtra("SCAN_RESULT")
+            qrCodeResult?.let { scannedInventoryNumber = it }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -114,7 +133,7 @@ fun AddInventoryDocumentScreen(
                             .padding(16.dp)
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.clipboardlist), // Замените на ваш ресурс
+                            painter = painterResource(id = R.drawable.clipboardlist),
                             contentDescription = "Документ инвентаризации",
                             modifier = Modifier
                                 .size(48.dp)
@@ -137,12 +156,25 @@ fun AddInventoryDocumentScreen(
                 }
 
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Button(
+                    onClick = {
+                        val intent = Intent(context, CaptureActivity::class.java)
+                        intent.putExtra("SCAN_MODE", "QR_CODE_MODE")
+                        launcher.launch(intent)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .padding(16.dp)
+                ) {
+                    Text("Сканировать QR-код")
+                }
 
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.7f)
+                        .fillMaxHeight(0.6f)
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp)
                 ) {
@@ -162,7 +194,14 @@ fun AddInventoryDocumentScreen(
                                 .weight(1f)
                         ) {
                             items(fixedAssets) { fixedAsset ->
-                                var isPresent by rememberSaveable { mutableStateOf(false) }
+                                val isPresent = scannedInventoryNumber == fixedAsset.inventoryNumber
+                                var checkedState by rememberSaveable { mutableStateOf(isPresent) }
+
+                                if (isPresent) {
+                                    LaunchedEffect(Unit) {
+                                        checkedState = true
+                                    }
+                                }
 
                                 Row(
                                     modifier = Modifier
@@ -171,9 +210,9 @@ fun AddInventoryDocumentScreen(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Checkbox(
-                                        checked = isPresent,
+                                        checked = checkedState,
                                         onCheckedChange = { newValue ->
-                                            isPresent = newValue
+                                            checkedState = newValue
                                         }
                                     )
                                     Column {
@@ -189,15 +228,19 @@ fun AddInventoryDocumentScreen(
                                 }
                             }
                         }
+
                     }
+
+
+
+
                 }
+
 
 
 
             }
         }
-
-
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -207,23 +250,11 @@ fun AddInventoryDocumentScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-            if (errorMessage.isNotEmpty()) {
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
-            }
-
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                 ),
                 onClick = {
-                    // Логика сохранения документа инвентаризации
                     coroutineScope.launch {
                         try {
                             val documentNumber = inventoryViewModel.generateDocumentNumber()
@@ -235,16 +266,9 @@ fun AddInventoryDocumentScreen(
                             )
 
                             inventoryViewModel.addInventoryDocument(inventoryDocument)
-
-                            val newDocumentId = inventoryViewModel.getMaxDocumentId() ?: -1
-
-                            fixedAssets.forEach { fixedAsset ->
-                                // Здесь можно добавить логику для сохранения информации о наличии оборудования
-                            }
-
                             navController.popBackStack()
                         } catch (e: Exception) {
-                            errorMessage = "Ошибка при создании документа: ${e.message}"
+                            // Обработка ошибки
                         }
                     }
                 },
@@ -269,6 +293,14 @@ fun AddInventoryDocumentScreen(
                 Text("Отмена")
             }
         }
+
+    }
+}
+
+@Composable
+fun CaptureActivityIntent(context: Context): Intent {
+    return Intent(context, CaptureActivity::class.java).apply {
+        putExtra("SCAN_MODE", "QR_CODE_MODE")
     }
 }
 

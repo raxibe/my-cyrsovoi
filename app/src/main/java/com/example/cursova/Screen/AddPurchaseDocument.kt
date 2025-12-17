@@ -194,7 +194,7 @@ fun AddPurchaseDocument(
                                 expanded = isSupplierDropdownExpanded,
                                 onDismissRequest = { isSupplierDropdownExpanded = false },
                                 modifier = Modifier
-                                    .width(IntrinsicSize.Max) // Устанавливаем ширину выпадающего списка равной ширине кнопки
+                                    .width(IntrinsicSize.Max)
                             ) {
                                 suppliers.forEach { supplier ->
                                     DropdownMenuItem(
@@ -233,14 +233,26 @@ fun AddPurchaseDocument(
                                         items =
                                             items.map { if (it == item) it.copy(price = newPrice) else it }
                                     },
-                                    allItems = allItems, // Передаем список всех товаров
-                                    itemViewModel = itemViewModel // Передаем ItemViewModel
+                                    allItems = allItems,
+                                    itemViewModel = itemViewModel
                                 )
                             }
                             item {
                                 Button(
                                     onClick = {
-                                        items = items + Item(name = "", quantity = 1, price = 0.0)
+                                        // Проверяем, есть ли уже товар с пустым именем или дубликат
+                                        val hasEmptyName = items.any { it.name.isEmpty() }
+                                        if (hasEmptyName) {
+                                            errorMessage = "Заполните название товара"
+                                        } else {
+                                            val newItemName = "" // Пустое имя для нового товара
+                                            val isDuplicate = items.any { it.name == newItemName && newItemName.isNotEmpty() }
+                                            if (isDuplicate) {
+                                                errorMessage = "Этот товар уже добавлен"
+                                            } else {
+                                                items = items + Item(name = "", quantity = 1, price = 0.0)
+                                            }
+                                        }
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -284,45 +296,48 @@ fun AddPurchaseDocument(
                     containerColor = Color.Transparent,
                 ),
                 onClick = {
-                    if (supplierId == -1) {
-                        errorMessage = "Необходимо выбрать поставщика"
-                    } else if (items.isEmpty()) {
-                        errorMessage = "Необходимо добавить хотя бы один товар"
-                    } else if (items.any { it.quantity <= 0 || it.price <= 0.0 }) {
-                        errorMessage = "Количество и цена должны быть больше нуля"
+                    val hasEmptyName = items.any { it.name.isEmpty() }
+                    if (hasEmptyName) {
+                        errorMessage = "Заполните названия всех товаров"
                     } else {
-                        val supplierName = suppliers.find { it.id == supplierId }?.name ?: ""
+                        val hasDuplicateItems = items.groupingBy { it.name }.eachCount().any { it.value > 1 }
+                        if (hasDuplicateItems) {
+                            errorMessage = "Один и тот же товар добавлен несколько раз"
+                        } else if (supplierId == -1) {
+                            errorMessage = "Необходимо выбрать поставщика"
+                        } else if (items.isEmpty()) {
+                            errorMessage = "Необходимо добавить хотя бы один товар"
+                        } else if (items.any { it.quantity <= 0 || it.price <= 0.0 }) {
+                            errorMessage = "Количество и цена должны быть больше нуля"
+                        } else {
+                            val supplierName = suppliers.find { it.id == supplierId }?.name ?: ""
 
+                            coroutineScope.launch {
+                                val documentNumber = viewModel.generateDocumentNumber()
+                                val creationDate = System.currentTimeMillis()
 
-
-                        coroutineScope.launch {
-                            // Генерируем номер документа в корутине
-                            val documentNumber = viewModel.generateDocumentNumber()
-                            val creationDate = System.currentTimeMillis()
-
-                            // Сохраняем товары в базу данных
-                            items.forEach { item ->
-                                val existingItem = allItems.find { it.name == item.name }
-                                if (existingItem != null) {
-                                    val updatedItem = existingItem.copy(
-                                        quantity = existingItem.quantity + item.quantity,
-                                        price = item.price
-                                    )
-                                    itemViewModel.updateItem(updatedItem)
-                                } else {
-                                    itemViewModel.addItem(item)
+                                items.forEach { item ->
+                                    val existingItem = allItems.find { it.name == item.name }
+                                    if (existingItem != null) {
+                                        val updatedItem = existingItem.copy(
+                                            quantity = existingItem.quantity + item.quantity,
+                                            price = item.price
+                                        )
+                                        itemViewModel.updateItem(updatedItem)
+                                    } else {
+                                        itemViewModel.addItem(item)
+                                    }
                                 }
-                            }
 
-                            // Сохраняем документ закупки
-                            val purchaseDocument = PurchaseDocument(
-                                supplierName = supplierName,
-                                items = items.joinToString("\n") { it.toString() },
-                                documentNumber = documentNumber,
-                                creationDate = creationDate
-                            )
-                            viewModel.addPurchaseDocument(purchaseDocument)
-                            navController.popBackStack()
+                                val purchaseDocument = PurchaseDocument(
+                                    supplierName = supplierName,
+                                    items = items.joinToString("\n") { "${it.name}, Количество: ${it.quantity}, Цена: ${it.price}" },
+                                    documentNumber = documentNumber,
+                                    creationDate = creationDate
+                                )
+                                viewModel.addPurchaseDocument(purchaseDocument)
+                                navController.popBackStack()
+                            }
                         }
                     }
                 },
@@ -335,8 +350,7 @@ fun AddPurchaseDocument(
             }
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent, // Цвет фона кнопки
-                    // Цвет текста на кнопке
+                    containerColor = Color.Transparent,
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
@@ -349,6 +363,7 @@ fun AddPurchaseDocument(
         }
     }
 }
+
 
 @Composable
 fun ItemRow(

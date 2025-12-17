@@ -77,6 +77,9 @@ dependencies {
         ///
 
 
+    implementation (libs.com.journeyapps.zxing.android.embedded)
+
+
     implementation(libs.androidx.navigation.comose)
 
     implementation(libs.kotlinx.serialization.json)

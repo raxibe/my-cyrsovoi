@@ -1,5 +1,6 @@
 [versions]
 agp = "8.10.1"
+journeyappsZxingAndroidEmbedded = "4.3.0"
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -27,6 +28,7 @@ roomRuntimeAndroid = "2.8.4"
 
 [libraries]
 
+com-journeyapps-zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "journeyappsZxingAndroidEmbedded" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltCompiler" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 
