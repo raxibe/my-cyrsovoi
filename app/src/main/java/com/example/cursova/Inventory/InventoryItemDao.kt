@@ -24,4 +24,6 @@ interface InventoryItemDao {
 
     @Query("DELETE FROM inventory_items WHERE inventoryDocumentId = :inventoryDocumentId")
     suspend fun deleteAllInventoryItemsByDocumentId(inventoryDocumentId: Int)
+
+
 }

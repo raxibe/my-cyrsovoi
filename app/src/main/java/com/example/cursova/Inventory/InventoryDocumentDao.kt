@@ -23,4 +23,9 @@ interface InventoryDocumentDao {
 
     @Query("SELECT MAX(id) FROM inventory_documents")
     suspend fun getMaxDocumentId(): Int?
+
+    @Query("SELECT * FROM inventory_documents WHERE id = :id")
+    suspend fun getInventoryDocumentById(id: Int): InventoryDocument?
+
+
 }

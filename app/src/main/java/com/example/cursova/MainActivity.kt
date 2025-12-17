@@ -65,6 +65,7 @@ import com.example.cursova.Screen.FixedAssets
 
 
 import com.example.cursova.Screen.Hall
+import com.example.cursova.Screen.InventoryDocumentDetailsScreen
 import com.example.cursova.Screen.InventoryDocumentsScreen
 
 
@@ -211,6 +212,17 @@ class MainActivity : ComponentActivity() {
                 composable(Screens.InventoryDocumentsScreen.route) {
                     InventoryDocumentsScreen(navController = navController)
                 }
+
+//                composable(
+//                    route = Screens.InventoryDocumentDetails.route,
+//                    arguments = listOf(navArgument("documentId") { type = NavType.IntType })
+//                ) { backStackEntry ->
+//                    val documentId = backStackEntry.arguments?.getInt("documentId") ?: -1
+//                    InventoryDocumentDetailsScreen(
+//                        navController = navController,
+//                        documentId = documentId
+//                    )
+//                }
 
 
 

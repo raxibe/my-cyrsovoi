@@ -1,6 +1,7 @@
 package com.example.cursova.Screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -102,9 +103,7 @@ fun InventoryDocumentsScreen(
                             document = document,
                             formattedDate = formattedDate,
 
-                            onDeleteClick = {
-                                inventoryViewModel.deleteInventoryDocument(document)
-                            }
+
                         )
                     }
                 }
@@ -117,12 +116,14 @@ fun InventoryDocumentsScreen(
 fun InventoryDocumentCard(
     document: InventoryDocument,
     formattedDate: String,
-    onDeleteClick: () -> Unit
+
+
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
+
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(

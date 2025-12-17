@@ -33,4 +33,9 @@ sealed class Screens (val route: String){
     object InventoryDocumentsScreen : Screens ("inventory-documents-screen")
     object AddInventoryDocumentScreen : Screens("inventory-documents-add")
 
+
+//    object InventoryDocumentDetails : Screens("inventory_document_details/{documentId}") {
+//        fun createRoute(documentId: Int) = "inventory_document_details/$documentId"
+//    }
+
 }
