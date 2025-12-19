@@ -1,4 +1,4 @@
-package com.example.cursova.Screen
+ package com.example.cursova.Screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

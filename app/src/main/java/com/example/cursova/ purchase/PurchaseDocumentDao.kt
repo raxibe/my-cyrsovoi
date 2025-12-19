@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PurchaseDocumentDao {
+
     @Query("SELECT * FROM purchase_documents ORDER BY id ASC")
     fun getAllPurchaseDocuments(): Flow<List<PurchaseDocument>>
 

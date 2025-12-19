@@ -76,9 +76,11 @@ fun AddInventoryDocumentScreen(
     val coroutineScope = rememberCoroutineScope()
     var scannedInventoryNumber by remember { mutableStateOf("") }
 
+
     val gradient2 = Brush.linearGradient(
-        colors = listOf(Color(0xFF5FBBEE), Color(0xFF03A9F4))
-    )
+        colors = listOf(Color(0xFF9B65FF), Color(0xFF5D00FF)),
+
+        )
     val gradient5 = Brush.linearGradient(
         colors = listOf(Color(0xD500FF07), Color(0xDF009306))
     )
