@@ -53,9 +53,14 @@ fun PurchaseDocuments(
 ) {
     val purchaseDocuments by viewModel.purchaseDocuments.collectAsStateWithLifecycle()
 
+    // Сортируем документы по дате создания в обратном порядке
+    val sortedPurchaseDocuments = remember(purchaseDocuments) {
+        purchaseDocuments.sortedByDescending { it.creationDate }
+    }
+
     // Рассчитываем общую сумму всех товаров
-    val totalSumAll = remember(purchaseDocuments) {
-        purchaseDocuments.sumOf { document ->
+    val totalSumAll = remember(sortedPurchaseDocuments) {
+        sortedPurchaseDocuments.sumOf { document ->
             document.items.lines().sumOf { line ->
                 val parts = line.split(", ")
                 val quantity = parts.find { it.startsWith("Количество:") }?.split(": ")?.get(1)?.toIntOrNull() ?: 0
@@ -97,7 +102,7 @@ fun PurchaseDocuments(
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(purchaseDocuments) { document ->
+                    items(sortedPurchaseDocuments) { document ->
                         // Рассчитываем сумму для каждого документа
                         val documentSum = document.items.lines().sumOf { line ->
                             val parts = line.split(", ")

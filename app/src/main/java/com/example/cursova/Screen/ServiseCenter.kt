@@ -49,7 +49,7 @@ fun ServiceCenter(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Номенклатура") },
+                title = { Text("Сервисные центры") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
