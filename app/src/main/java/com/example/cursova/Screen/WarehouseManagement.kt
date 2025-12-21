@@ -209,7 +209,7 @@ fun ModuleCard1(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(15.dp))
             .fillMaxWidth(0.9F)
-            .height(90.dp),
+            .height(95.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(

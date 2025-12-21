@@ -163,6 +163,7 @@ fun AddPurchaseDocument(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp)
+
                         ) {
                             OutlinedButton(
                                 onClick = { isSupplierDropdownExpanded = true },
@@ -178,7 +179,7 @@ fun AddPurchaseDocument(
                                         text = if (supplierId != -1) suppliers.find { it.id == supplierId }?.name
                                             ?: "Выберите поставщика" else "Выберите поставщика",
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 8.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -277,7 +278,7 @@ fun AddPurchaseDocument(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             if (errorMessage.isNotEmpty()) {
                 Text(
@@ -399,7 +400,7 @@ fun ItemRow(
                     Text(
                         text = if (item.name.isNotEmpty()) item.name else "Выберите товар",
                         modifier = Modifier
-                            .padding(top = 11.dp)
+                            .padding(top = 8.dp)
                     )
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,

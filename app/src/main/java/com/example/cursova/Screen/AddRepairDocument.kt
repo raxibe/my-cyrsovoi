@@ -191,7 +191,7 @@ fun AddRepairDocument(
                                             "Выберите основное средство"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 9.dp)
+                                            .padding(top = 6.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -258,7 +258,7 @@ fun AddRepairDocument(
                                             "Выберите сервисный \nцентр"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 9.dp)
+                                            .padding(top = 6.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -402,7 +402,7 @@ fun AddRepairDocument(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
             if (errorMessage.isNotEmpty()) {
                 Text(

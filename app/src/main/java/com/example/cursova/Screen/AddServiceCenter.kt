@@ -167,7 +167,7 @@ fun AddServiceCenter(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Button(
 

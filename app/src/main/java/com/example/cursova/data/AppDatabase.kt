@@ -47,7 +47,7 @@ import com.example.cursova.repair.RepairDao
         PurchaseDocument::class, Item::class, AcceptanceDocument::class,
         FixedAsset::class, WriteOffDocument::class, RepairDocument::class,
                 RepairReturnDocument::class,InventoryDocument::class,InventoryItem::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 

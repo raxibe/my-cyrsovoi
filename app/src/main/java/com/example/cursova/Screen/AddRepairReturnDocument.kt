@@ -3,10 +3,12 @@ package com.example.cursova.Screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,7 +51,6 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("RememberReturnType")
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun AddRepairReturnDocument(
     navController: NavController,
@@ -61,7 +62,7 @@ fun AddRepairReturnDocument(
     var errorMessage by remember { mutableStateOf("") }
 
     val repairDocuments by repairDocumentViewModel.repairDocuments.collectAsStateWithLifecycle()
-    var repairDocument = remember(repairDocumentId, repairDocuments) {
+    val repairDocument = remember(repairDocumentId, repairDocuments) {
         repairDocuments.find { it.id == repairDocumentId }
     }
 
@@ -71,7 +72,7 @@ fun AddRepairReturnDocument(
     )
 
     LaunchedEffect(repairDocumentId) {
-        repairDocument = repairDocumentViewModel.getRepairDocumentById(repairDocumentId)
+        repairDocumentViewModel.getRepairDocumentById(repairDocumentId)
     }
 
     Column(
@@ -79,31 +80,33 @@ fun AddRepairReturnDocument(
             .fillMaxSize()
             .background(colorResource(id = R.color.фонпервогоэкрана))
             .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth()
                 .background(
                     colorResource(id = R.color.фонпервогоэкрана),
                     shape = RoundedCornerShape(16.dp)
                 )
+                .padding(horizontal = 16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .background(colorResource(id = R.color.фонпервогоэкрана))
             ) {
                 Box(
                     modifier = Modifier
-                        .width(300.dp)
+                        .fillMaxWidth()
                         .background(Color.White, shape = RoundedCornerShape(16.dp))
                         .padding(horizontal = 16.dp)
                 ) {
                     Column(
                         modifier = Modifier
-                            .width(300.dp)
+                            .fillMaxWidth()
                             .padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -126,82 +129,87 @@ fun AddRepairReturnDocument(
                         )
                     }
                 }
-            }
-        }
+                Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .width(300.dp)
-                .background(Color.White, shape = RoundedCornerShape(16.dp))
-                .padding(8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .width(300.dp)
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
-            ) {
-                // Информация о документе ремонта
-                Text(
-                    text = "Документ ремонта №${repairDocument?.documentNumber ?: ""}",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Основное средство: Оборудование №${repairDocument?.fixedAssetId ?: ""}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Сервисный центр: Центр №${repairDocument?.serviceCenterId ?: ""}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Тип ремонта: Тип №${repairDocument?.repairTypeId ?: ""}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Стоимость ремонта: ${repairDocument?.repairCost ?: ""} руб.",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Срок ремонта: ${repairDocument?.repairDuration ?: ""} дней",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Поле для состояния оборудования
-                Text(
-                    text = "Состояние оборудования",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                OutlinedTextField(
-                    value = condition,
-                    onValueChange = { condition = it },
+                Box(
                     modifier = Modifier
-                        .width(300.dp)
-                        .padding(top = 8.dp),
-                    label = { Text("Опишите состояние оборудования") }
-                )
+                        .fillMaxWidth()
+                        .background(Color.White, shape = RoundedCornerShape(16.dp))
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        // Информация о документе ремонта
+                        Text(
+                            text = "Документ ремонта №${repairDocument?.documentNumber ?: ""}",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Основное средство: Оборудование №${repairDocument?.fixedAssetId ?: ""}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Сервисный центр: Центр №${repairDocument?.serviceCenterId ?: ""}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Тип ремонта: Тип №${repairDocument?.repairTypeId ?: ""}",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Стоимость ремонта: ${repairDocument?.repairCost ?: ""} руб.",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Срок ремонта: ${repairDocument?.repairDuration ?: ""} дней",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
 
-                if (errorMessage.isNotEmpty()) {
-                    Text(
-                        text = errorMessage,
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Поле для состояния оборудования
+                        Text(
+                            text = "Состояние оборудования",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        OutlinedTextField(
+                            value = condition,
+                            onValueChange = { condition = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            label = { Text("Опишите состояние оборудования") }
+                        )
+
+                        if (errorMessage.isNotEmpty()) {
+                            Text(
+                                text = errorMessage,
+                                color = Color.Red,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    }
                 }
+
             }
+
+
+
+
+
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         val gradient5 = Brush.linearGradient(
             colors = listOf(Color(0xD500FF07), Color(0xDF009306))
@@ -213,7 +221,8 @@ fun AddRepairReturnDocument(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 20.dp)
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(
@@ -244,7 +253,7 @@ fun AddRepairReturnDocument(
                     }
                 },
                 modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .padding(bottom = 8.dp)
                     .background(gradient5, shape = RoundedCornerShape(50.dp))
             ) {
@@ -256,7 +265,7 @@ fun AddRepairReturnDocument(
                 ),
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .padding(bottom = 16.dp)
                     .background(gradient6, shape = RoundedCornerShape(50.dp))
             ) {

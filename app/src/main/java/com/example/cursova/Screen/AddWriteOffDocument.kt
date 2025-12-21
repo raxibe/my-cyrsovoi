@@ -177,7 +177,7 @@ fun AddWriteOffDocument(
                                             "Выберите основное средство"
                                         },
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 6.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -242,7 +242,8 @@ fun AddWriteOffDocument(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(1f)
+            )
 
         val gradient5 = Brush.linearGradient(
             colors = listOf(Color(0xD500FF07), Color(0xDF009306))
@@ -255,7 +256,7 @@ fun AddWriteOffDocument(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Button(
                 colors = ButtonDefaults.buttonColors(

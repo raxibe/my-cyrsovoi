@@ -185,7 +185,7 @@ fun AddResponsible(
                                     Text(
                                         text = if (selectedHallId != -1) halls.find { it.id == selectedHallId }?.name ?: "Выберите зал" else "Выберите зал",
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 8.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -239,7 +239,7 @@ fun AddResponsible(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             Button(
 

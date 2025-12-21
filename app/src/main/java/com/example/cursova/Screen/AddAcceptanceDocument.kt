@@ -178,7 +178,7 @@ fun AddAcceptanceDocument(
                                 onClick = { isTransferPersonDropdownExpanded = true },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(60.dp)
+                                    .height(65.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
@@ -187,7 +187,7 @@ fun AddAcceptanceDocument(
                                     Text(
                                         text = if (transferPersonId != -1) responsibles.find { it.id == transferPersonId }?.name ?: "Выберите передающее лицо" else "Выберите передающее лицо",
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 6.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -242,7 +242,7 @@ fun AddAcceptanceDocument(
                                     Text(
                                         text = if (responsibleId != -1) responsibles.find { it.id == responsibleId }?.name ?: "Выберите МОЛ" else "Выберите МОЛ",
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 8.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -297,7 +297,7 @@ fun AddAcceptanceDocument(
                                     Text(
                                         text = if (selectedItemId != -1) items.find { it.id == selectedItemId }?.name ?: "Выберите товар" else "Выберите товар",
                                         modifier = Modifier
-                                            .padding(top = 11.dp)
+                                            .padding(top = 8.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
@@ -344,7 +344,7 @@ fun AddAcceptanceDocument(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
             if (errorMessage.isNotEmpty()) {
                 Text(
