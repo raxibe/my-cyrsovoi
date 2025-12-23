@@ -152,7 +152,7 @@ fun AcceptanceDocumentCard(
                         style = MaterialTheme.typography.bodyMedium
                     )
                     Text(
-                        text = "Товары:\n${acceptanceDocument.items}",
+                        text = "Оборудование:\n${acceptanceDocument.items}",
                         style = MaterialTheme.typography.bodyMedium,
                         softWrap = true,
                         overflow = TextOverflow.Visible

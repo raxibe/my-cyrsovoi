@@ -233,7 +233,7 @@ fun AddAcceptanceDocument(
                                 onClick = { isResponsibleDropdownExpanded = true },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(55.dp)
+                                    .height(65.dp)
                             ) {
                                 Box(
                                     modifier = Modifier
@@ -276,7 +276,7 @@ fun AddAcceptanceDocument(
 
                         // Товар
                         Text(
-                            text = "Товар",
+                            text = "Оборудование",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Box(
@@ -295,13 +295,13 @@ fun AddAcceptanceDocument(
                                         .fillMaxWidth()
                                 ) {
                                     Text(
-                                        text = if (selectedItemId != -1) items.find { it.id == selectedItemId }?.name ?: "Выберите товар" else "Выберите товар",
+                                        text = if (selectedItemId != -1) items.find { it.id == selectedItemId }?.name ?: "Выберите оборудование" else "Выберите оборудование",
                                         modifier = Modifier
                                             .padding(top = 8.dp)
                                     )
                                     Icon(
                                         imageVector = Icons.Default.ArrowDropDown,
-                                        contentDescription = "Открыть список товаров",
+                                        contentDescription = "Открыть список Оборудование",
                                         modifier = Modifier
                                             .size(60.dp)
                                             .padding(start = 35.dp)
@@ -366,14 +366,14 @@ fun AddAcceptanceDocument(
                     } else if (responsibleId == -1) {
                         errorMessage = "Выберите материально-ответственное лицо"
                     } else if (selectedItemId == -1) {
-                        errorMessage = "Выберите товар"
+                        errorMessage = "Выберите оборудование"
                     } else {
                         coroutineScope.launch {
                             val selectedItem = items.find { it.id == selectedItemId }
                             if (selectedItem == null) {
-                                errorMessage = "Выбранный товар не найден"
+                                errorMessage = "Выбранное оборудование не найдено"
                             } else if (selectedItem.quantity <= 0) {
-                                errorMessage = "Недостаточно товара на складе"
+                                errorMessage = "Недостаточно оборудования на складе"
                             } else {
                                 try {
                                     val documentNumber = acceptanceDocumentViewModel.generateDocumentNumber()
